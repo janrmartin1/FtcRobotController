@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @TeleOp
 public class testCalibration extends LinearOpMode{
     static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = .5 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
@@ -38,7 +38,7 @@ public class testCalibration extends LinearOpMode{
             int newRightTarget;
 
 
-            newLeftTarget = Bright.getCurrentPosition() + (int)(50.2655 * COUNTS_PER_INCH);
+            newLeftTarget = Bright.getCurrentPosition() + (int)(50.2655 * COUNTS_PER_INCH * 4);
             //newRightTarget = Fright.getCurrentPosition() + (int)(50.2655 * COUNTS_PER_INCH);
             Bright.setTargetPosition(newLeftTarget);
             //Fright.setTargetPosition(newRightTarget);
@@ -50,8 +50,9 @@ public class testCalibration extends LinearOpMode{
             //Fright.setPower(.2);
 
             while(Bright.isBusy()){
-                telemetry.addData("Bright", "Running at %7d :%7d",
+                telemetry.addData("Bright", "Running at %7d",
                         Bright.getCurrentPosition());
+                telemetry.update();
             }
             Bright.setPower(0);
             //Fright.setPower(0);
