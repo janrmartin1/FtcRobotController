@@ -69,6 +69,8 @@ public class TFODparkingV3 extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
+    String label = null;
+
     private static final String[] LABELS = {
       "1 Bolt",
       "2 Bulb",
@@ -142,12 +144,12 @@ public class TFODparkingV3 extends LinearOpMode {
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
-        String label = "";
-        if (opModeIsActive()) {
-            Fright.setPower(1);
-            Fleft.setPower(1);
-            Bright.setPower(1);
-            Bleft.setPower(1);
+        //String label = "";
+        //if (opModeIsActive()) {
+           // Fright.setPower(1);
+            //Fleft.setPower(1);
+            //Bright.setPower(1);
+            //Bleft.setPower(1);
 
             while (opModeIsActive()) {
 
@@ -171,7 +173,7 @@ public class TFODparkingV3 extends LinearOpMode {
                             telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
 
-                            if(recognition.getConfidence() >= .9){
+                            if(recognition.getConfidence() >= .7){
                                 label = recognition.getLabel();
                             }
 
@@ -181,16 +183,23 @@ public class TFODparkingV3 extends LinearOpMode {
                     }
 
                 }
-                //This is looking to see if the bolt has been detected and if it has it runs the code inside it
-                if (label.contains("1 Bolt")) {
-                    sleep(5000);
-                    Fright.setPower(-1);
-                    Fleft.setPower(-1);
-                    Bright.setPower(-1);
-                    Bleft.setPower(-1);
-                    sleep(100);
+                if(label == null){
                     Fright.setPower(1);
-                    Fleft.setPower(-1);
+                    Fleft.setPower(1);
+                    Bright.setPower(1);
+                    Bleft.setPower(1);
+                    sleep(100);
+                    Fright.setPower(0);
+                    Fleft.setPower(0);
+                    Bright.setPower(0);
+                    Bleft.setPower(0);
+                    sleep(5000);
+                }
+
+                //This is looking to see if the bolt has been detected and if it has it runs the code inside it
+                if (label == "1 Bolt") {
+                    Fright.setPower(-1);
+                    Fleft.setPower(1);
                     Bright.setPower(-1);
                     Bleft.setPower(1);
                     sleep(250);
@@ -203,62 +212,42 @@ public class TFODparkingV3 extends LinearOpMode {
                     Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
-                }/*
+                    sleep(9999999);
+                }
                 //This is looking to see if the bulb has been detected and if it has it runs the code inside it
-                else if (label.contains("2 Bulb")) {
-                    sleep(5000);
+                else if (label == "2 Bulb") {
                     Fright.setPower(-1);
-                    Fleft.setPower(-1);
-                    Bright.setPower(-1);
-                    Bleft.setPower(-1);
-                    sleep(100);
-                    Fright.setPower(1);
-                    Fleft.setPower(-1);
-                    Bright.setPower(-1);
-                    Bleft.setPower(1);
-                    sleep(250);
-                    Fright.setPower(1);
                     Fleft.setPower(1);
-                    Bright.setPower(1);
+                    Bright.setPower(-1);
                     Bleft.setPower(1);
                     sleep(4000);
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
+                    sleep(999999);
                 }
                 //This is looking to see if the panel has been detected and if it has it runs the code inside it
-                else if (label.contains("3 Panel")) {
-                    sleep(5000);
-                    Fright.setPower(-1);//This is setting the power of the motors
+                else if (label == "3 Panel") {
+                    Fright.setPower(1);//This is setting the power of the motors
                     Fleft.setPower(-1);
-                    Bright.setPower(-1);
-                    Bleft.setPower(-1);
-                    sleep(100);//This is setting how long the motors can go at that power
-                    Fright.setPower(1);
-                    Fleft.setPower(-1);
-                    Bright.setPower(-1);
-                    Bleft.setPower(1);
-                    sleep(250);
-                    Fright.setPower(1);
-                    Fleft.setPower(1);
                     Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(6000);
+                    Bleft.setPower(-1);
+                    sleep(3500);
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
                 }
-                /*else {
+                else {
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bleft.setPower(0);
-                    Bright.setPower(0);}*/
+                    Bright.setPower(0);}
                 telemetry.update();
             }
         }
-    }
+
 
 
     /**
