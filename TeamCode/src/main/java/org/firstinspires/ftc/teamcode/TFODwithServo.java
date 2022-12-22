@@ -71,7 +71,7 @@ public class TFODwithServo extends LinearOpMode {
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     String label = null;
-    double FleftPosition = 0.0;
+
 
     private static final String[] LABELS = {
             "1 Bolt",
@@ -113,15 +113,14 @@ public class TFODwithServo extends LinearOpMode {
         // first.
         initVuforia();
         initTfod();
-        Servo Fleft = hardwareMap.servo.get("Fleft");
+        DcMotor Fleft = hardwareMap.dcMotor.get("Fleft");
         DcMotor Bleft = hardwareMap.dcMotor.get("Bleft");
         DcMotor Fright = hardwareMap.dcMotor.get("Fright");
         DcMotor Bright = hardwareMap.dcMotor.get("Bright");
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        Fleft.setPosition(FleftPosition);
+        Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -190,14 +189,14 @@ public class TFODwithServo extends LinearOpMode {
             }
             if(label == null){
                 Fright.setPower(1);
-                FleftPosition = 1;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 1;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(1);
                 Bleft.setPower(1);
                 sleep(100);
                 Fright.setPower(0);
-                FleftPosition = 0;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 0;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(0);
                 Bleft.setPower(0);
                 sleep(5000);
@@ -206,20 +205,20 @@ public class TFODwithServo extends LinearOpMode {
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
             if (label == "1 Bolt") {
                 Fright.setPower(-1);
-                FleftPosition = 1;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 1;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(-1);
                 Bleft.setPower(1);
                 sleep(250);
                 Fright.setPower(1);
-                FleftPosition = 1;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 1;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(1);
                 Bleft.setPower(1);
                 sleep(2000);
                 Fright.setPower(0);
-                FleftPosition = 0;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 0;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(0);
                 Bleft.setPower(0);
                 sleep(9999999);
@@ -227,14 +226,14 @@ public class TFODwithServo extends LinearOpMode {
             //This is looking to see if the bulb has been detected and if it has it runs the code inside it
             else if (label == "2 Bulb") {
                 Fright.setPower(-1);
-                FleftPosition = 1;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 1;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(-1);
                 Bleft.setPower(1);
                 sleep(4000);
                 Fright.setPower(0);
-                FleftPosition = 0;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 0;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(0);
                 Bleft.setPower(0);
                 sleep(999999);
@@ -242,21 +241,21 @@ public class TFODwithServo extends LinearOpMode {
             //This is looking to see if the panel has been detected and if it has it runs the code inside it
             else if (label == "3 Panel") {
                 Fright.setPower(1);//This is setting the power of the motors
-                FleftPosition = -1;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = -1;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(1);
                 Bleft.setPower(-1);
                 sleep(3500);
                 Fright.setPower(0);
-                FleftPosition = 0;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 0;
+                //Fleft.setPosition(FleftPosition);
                 Bright.setPower(0);
                 Bleft.setPower(0);
             }
             else {
                 Fright.setPower(0);
-                FleftPosition = 0;
-                Fleft.setPosition(FleftPosition);
+                //FleftPosition = 0;
+                //Fleft.setPosition(FleftPosition);
                 Bleft.setPower(0);
                 Bright.setPower(0);}
             telemetry.update();

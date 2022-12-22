@@ -111,14 +111,14 @@ public class TFODparkingV3 extends LinearOpMode {
         // first.
         initVuforia();
         initTfod();
-        DcMotor Fleft = hardwareMap.dcMotor.get("Fleft");
+        DcMotorSimple Fleft =  hardwareMap.get(DcMotorSimple.class,"Fleft");
         DcMotor Bleft = hardwareMap.dcMotor.get("Bleft");
         DcMotor Fright = hardwareMap.dcMotor.get("Fright");
         DcMotor Bright = hardwareMap.dcMotor.get("Bright");
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -184,30 +184,37 @@ public class TFODparkingV3 extends LinearOpMode {
 
                 }
                 if(label == null){
-                    Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(100);
+                    Fright.setPower(-1);
+                    Fleft.setPower(-1);
+                    Bright.setPower(-1);
+                    Bleft.setPower(-1);
+                    sleep(1000);
                     Fright.setPower(0);
-                    Fleft.setPower(0);
+                    Fleft.setPower(1);
                     Bright.setPower(0);
                     Bleft.setPower(0);
+                    sleep(100);
+                    Fleft.setPower(0);
                     sleep(5000);
                 }
 
                 //This is looking to see if the bolt has been detected and if it has it runs the code inside it
                 if (label == "1 Bolt") {
-                    Fright.setPower(-1);
-                    Fleft.setPower(1);
-                    Bright.setPower(-1);
-                    Bleft.setPower(1);
-                    sleep(250);
                     Fright.setPower(1);
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(2000);
+                    sleep(400);
+                    Fright.setPower(1);
+                    Fleft.setPower(-1);
+                    Bright.setPower(1);
+                    Bleft.setPower(-1);
+                    sleep(400);
+                    Fright.setPower(1);
+                    Fleft.setPower(1);
+                    Bright.setPower(1);
+                    Bleft.setPower(1);
+                    sleep(600);
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bright.setPower(0);
@@ -216,11 +223,11 @@ public class TFODparkingV3 extends LinearOpMode {
                 }
                 //This is looking to see if the bulb has been detected and if it has it runs the code inside it
                 else if (label == "2 Bulb") {
-                    Fright.setPower(-1);
+                    Fright.setPower(1);
                     Fleft.setPower(1);
-                    Bright.setPower(-1);
+                    Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(4000);
+                    sleep(400);
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bright.setPower(0);
@@ -229,15 +236,26 @@ public class TFODparkingV3 extends LinearOpMode {
                 }
                 //This is looking to see if the panel has been detected and if it has it runs the code inside it
                 else if (label == "3 Panel") {
-                    Fright.setPower(1);//This is setting the power of the motors
-                    Fleft.setPower(-1);
+                    Fright.setPower(1);
+                    Fleft.setPower(1);
                     Bright.setPower(1);
-                    Bleft.setPower(-1);
-                    sleep(3500);
+                    Bleft.setPower(1);
+                    sleep(400);
+                    Fright.setPower(-1);//This is setting the power of the motors
+                    Fleft.setPower(1);
+                    Bright.setPower(-1);
+                    Bleft.setPower(1);
+                    sleep(370);
+                    Fright.setPower(1);
+                    Fleft.setPower(1);
+                    Bright.setPower(1);
+                    Bleft.setPower(1);
+                    sleep(420);
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
+                    sleep(9999999);
                 }
                 else {
                     Fright.setPower(0);
