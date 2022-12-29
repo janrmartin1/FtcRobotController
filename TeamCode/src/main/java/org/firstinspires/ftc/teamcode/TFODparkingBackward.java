@@ -29,12 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static java.util.logging.Logger.global;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -56,8 +52,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "TFOD_Parking", group = "Concept")
-public class TFODparkingV3 extends LinearOpMode {
+@Autonomous(name = "TFOD_ParkingBackwards", group = "Concept")
+public class TFODparkingBackward extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -118,8 +114,10 @@ public class TFODparkingV3 extends LinearOpMode {
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Setting motors to reverse for if we mount the camera on the back
+        Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        Fright.setDirection(DcMotorSimple.Direction.REVERSE);
+        Bright.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -188,12 +186,12 @@ public class TFODparkingV3 extends LinearOpMode {
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(100);
+                    sleep(200);
                     Fright.setPower(0);
-                    //Fleft.setPower(0);
+                    Fleft.setPower(1);
                     Bright.setPower(0);
                     Bleft.setPower(0);
-                    sleep(100);
+                    sleep(300);
                     Fleft.setPower(0);
                     sleep(5000);
                 }
@@ -204,27 +202,17 @@ public class TFODparkingV3 extends LinearOpMode {
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(300);
-                    Fright.setPower(0);
-                    Bright.setPower(0);
-                    Bleft.setPower(0);
-                    sleep(100);
+                    sleep(200);
                     Fright.setPower(1);
-                    Fleft.setPower(-.9);
-                    Bright.setPower(-.75);
-                    Bleft.setPower(1);
-                    sleep(625);
-                    /*
-                    Fright.setPower(0);
-                    Fleft.setPower(1);
+                    Fleft.setPower(-1);
                     Bright.setPower(1);
-                    Bleft.setPower(0);
-                    sleep(500);
-                    /*Fright.setPower(1);
+                    Bleft.setPower(-1);
+                    sleep(300);
+                    Fright.setPower(1);
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(500);*/
+                    sleep(300);
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bright.setPower(0);
@@ -250,27 +238,17 @@ public class TFODparkingV3 extends LinearOpMode {
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(300);
-                    Fright.setPower(0);
-                    Bright.setPower(0);
-                    Bleft.setPower(0);
-                    sleep(100);
-                    Fright.setPower(-1);
+                    sleep(400);
+                    Fright.setPower(-1);//This is setting the power of the motors
                     Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(-1);
-                    sleep(600);
-                    /*
-                    Fright.setPower(0);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(0);
-                    sleep(500);
-                    /*Fright.setPower(1);
+                    Bright.setPower(-1);
+                    Bleft.setPower(1);
+                    sleep(370);
+                    Fright.setPower(1);
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(500);*/
+                    sleep(420);
                     Fright.setPower(0);
                     Fleft.setPower(0);
                     Bright.setPower(0);
