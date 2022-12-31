@@ -229,7 +229,8 @@ public class TFODparkingV3 extends LinearOpMode {
                     Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
-                    sleep(9999999);
+                    break;
+                    //sleep(9999999);
                 }
                 //This is looking to see if the bulb has been detected and if it has it runs the code inside it
                 else if (label == "2 Bulb") {
@@ -242,7 +243,8 @@ public class TFODparkingV3 extends LinearOpMode {
                     Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
-                    sleep(999999);
+                    break;
+                   // sleep(999999);
                 }
                 //This is looking to see if the panel has been detected and if it has it runs the code inside it
                 else if (label == "3 Panel") {
@@ -275,7 +277,8 @@ public class TFODparkingV3 extends LinearOpMode {
                     Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
-                    sleep(9999999);
+                    break;
+                    //sleep(9999999);
                 }
                 else {
                     Fright.setPower(0);

@@ -29,8 +29,12 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static java.util.logging.Logger.global;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -68,9 +72,9 @@ public class TFODparkingBackward extends LinearOpMode {
     String label = null;
 
     private static final String[] LABELS = {
-      "1 Bolt",
-      "2 Bulb",
-      "3 Panel"
+            "1 Bolt",
+            "2 Bulb",
+            "3 Panel"
     };
 
 
@@ -114,10 +118,10 @@ public class TFODparkingBackward extends LinearOpMode {
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        //Setting motors to reverse for if we mount the camera on the back
+        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        Fright.setDirection(DcMotorSimple.Direction.REVERSE);
         Bright.setDirection(DcMotorSimple.Direction.REVERSE);
+        Fright.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -144,125 +148,145 @@ public class TFODparkingBackward extends LinearOpMode {
         waitForStart();
         //String label = "";
         //if (opModeIsActive()) {
-           // Fright.setPower(1);
-            //Fleft.setPower(1);
-            //Bright.setPower(1);
-            //Bleft.setPower(1);
+        // Fright.setPower(1);
+        //Fleft.setPower(1);
+        //Bright.setPower(1);
+        //Bleft.setPower(1);
 
-            while (opModeIsActive()) {
+        while (opModeIsActive()) {
 
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Objects Detected", updatedRecognitions.size());
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Objects Detected", updatedRecognitions.size());
 
-                        // step through the list of recognitions and display image position/size information for each one
-                        // Note: "Image number" refers to the randomized image orientation/number
-                        for (Recognition recognition : updatedRecognitions) {
-                            double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                            double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                            double width = Math.abs(recognition.getRight() - recognition.getLeft());
-                            double height = Math.abs(recognition.getTop() - recognition.getBottom());
+                    // step through the list of recognitions and display image position/size information for each one
+                    // Note: "Image number" refers to the randomized image orientation/number
+                    for (Recognition recognition : updatedRecognitions) {
+                        double col = (recognition.getLeft() + recognition.getRight()) / 2;
+                        double row = (recognition.getTop() + recognition.getBottom()) / 2;
+                        double width = Math.abs(recognition.getRight() - recognition.getLeft());
+                        double height = Math.abs(recognition.getTop() - recognition.getBottom());
 
-                            telemetry.addData("", " ");
-                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                            telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-                            telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+                        telemetry.addData("", " ");
+                        telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+                        telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
+                        telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
 
-                            if(recognition.getConfidence() >= .7){
-                                label = recognition.getLabel();
-                            }
-
+                        if(recognition.getConfidence() >= .7){
+                            label = recognition.getLabel();
                         }
-
 
                     }
 
-                }
-                if(label == null){
-                    Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(200);
-                    Fright.setPower(0);
-                    Fleft.setPower(1);
-                    Bright.setPower(0);
-                    Bleft.setPower(0);
-                    sleep(300);
-                    Fleft.setPower(0);
-                    sleep(5000);
+
                 }
 
-                //This is looking to see if the bolt has been detected and if it has it runs the code inside it
-                if (label == "1 Bolt") {
-                    Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(200);
-                    Fright.setPower(1);
-                    Fleft.setPower(-1);
-                    Bright.setPower(1);
-                    Bleft.setPower(-1);
-                    sleep(300);
-                    Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(300);
-                    Fright.setPower(0);
-                    Fleft.setPower(0);
-                    Bright.setPower(0);
-                    Bleft.setPower(0);
-                    sleep(9999999);
-                }
-                //This is looking to see if the bulb has been detected and if it has it runs the code inside it
-                else if (label == "2 Bulb") {
-                    Fright.setPower(1);
-                    Fleft.setPower(.9);
-                    Bright.setPower(1);
-                    Bleft.setPower(.9);
-                    sleep(400);
-                    Fright.setPower(0);
-                    Fleft.setPower(0);
-                    Bright.setPower(0);
-                    Bleft.setPower(0);
-                    sleep(999999);
-                }
-                //This is looking to see if the panel has been detected and if it has it runs the code inside it
-                else if (label == "3 Panel") {
-                    Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(400);
-                    Fright.setPower(-1);//This is setting the power of the motors
-                    Fleft.setPower(1);
-                    Bright.setPower(-1);
-                    Bleft.setPower(1);
-                    sleep(370);
-                    Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(420);
-                    Fright.setPower(0);
-                    Fleft.setPower(0);
-                    Bright.setPower(0);
-                    Bleft.setPower(0);
-                    sleep(9999999);
-                }
-                else {
-                    Fright.setPower(0);
-                    Fleft.setPower(0);
-                    Bleft.setPower(0);
-                    Bright.setPower(0);}
-                telemetry.update();
             }
+            if(label == null){
+                Fright.setPower(1);
+                Fleft.setPower(1);
+                Bright.setPower(1);
+                Bleft.setPower(1);
+                sleep(100);
+                Fright.setPower(0);
+                //Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                sleep(100);
+                Fleft.setPower(0);
+                sleep(5000);
+            }
+
+            //This is looking to see if the bolt has been detected and if it has it runs the code inside it
+            if (label == "1 Bolt") {
+                Fright.setPower(1);
+                Fleft.setPower(1);
+                Bright.setPower(1);
+                Bleft.setPower(1);
+                sleep(300);
+                Fright.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                sleep(100);
+                Fright.setPower(1);
+                Fleft.setPower(-.9);
+                Bright.setPower(-.75);
+                Bleft.setPower(1);
+                sleep(625);
+                    /*
+                    Fright.setPower(0);
+                    Fleft.setPower(1);
+                    Bright.setPower(1);
+                    Bleft.setPower(0);
+                    sleep(500);
+                    /*Fright.setPower(1);
+                    Fleft.setPower(1);
+                    Bright.setPower(1);
+                    Bleft.setPower(1);
+                    sleep(500);*/
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                sleep(9999999);
+            }
+            //This is looking to see if the bulb has been detected and if it has it runs the code inside it
+            else if (label == "2 Bulb") {
+                Fright.setPower(1);
+                Fleft.setPower(.9);
+                Bright.setPower(1);
+                Bleft.setPower(.9);
+                sleep(400);
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                sleep(999999);
+            }
+            //This is looking to see if the panel has been detected and if it has it runs the code inside it
+            else if (label == "3 Panel") {
+                Fright.setPower(1);
+                Fleft.setPower(1);
+                Bright.setPower(1);
+                Bleft.setPower(1);
+                sleep(300);
+                Fright.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                sleep(100);
+                Fright.setPower(-1);
+                Fleft.setPower(1);
+                Bright.setPower(1);
+                Bleft.setPower(-1);
+                sleep(600);
+                    /*
+                    Fright.setPower(0);
+                    Fleft.setPower(1);
+                    Bright.setPower(1);
+                    Bleft.setPower(0);
+                    sleep(500);
+                    /*Fright.setPower(1);
+                    Fleft.setPower(1);
+                    Bright.setPower(1);
+                    Bleft.setPower(1);
+                    sleep(500);*/
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                sleep(9999999);
+            }
+            else {
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bleft.setPower(0);
+                Bright.setPower(0);}
+            telemetry.update();
         }
+    }
 
 
 
@@ -287,7 +311,7 @@ public class TFODparkingBackward extends LinearOpMode {
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
