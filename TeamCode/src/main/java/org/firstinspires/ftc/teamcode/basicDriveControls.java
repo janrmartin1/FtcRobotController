@@ -49,9 +49,7 @@ public class basicDriveControls extends LinearOpMode {
             } else if (gamepad2.left_bumper) {
                 lift.setPower(-.7);
             } else {
-                lift.setPower(0);}
-
-
+                lift.setPower(0);
                 if (gamepad2.dpad_up) {
                     //Set the lift to the top position
                 } else if (gamepad2.dpad_left) {
@@ -90,5 +88,6 @@ public class basicDriveControls extends LinearOpMode {
 
         }
     }
+}
 
 
