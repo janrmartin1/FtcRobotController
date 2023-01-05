@@ -9,9 +9,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp
-public class basicDriveControls extends LinearOpMode {
+public class DriveAndLiftTest extends LinearOpMode {
 
+    static final double     COUNTS_PER_MOTOR_REV    = 288 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = .5 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
+    static final double     LIFT_HEIGHT                = (int)40 * 22.388; //22 time
+    static final double     MAX_LIFT_HEIGHT         = 1100;;
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -29,9 +35,13 @@ public class basicDriveControls extends LinearOpMode {
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
 
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Fright.setDirection(DcMotorSimple.Direction.REVERSE);
         Bright.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         //Claw.setPosition(0);
 
@@ -44,21 +54,43 @@ public class basicDriveControls extends LinearOpMode {
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
 
+            int liftTarget = 0;
+
             if (gamepad2.right_bumper) {
-                lift.setPower(.5);
+                //lift.setPower(.5);
             } else if (gamepad2.left_bumper) {
-                lift.setPower(-.7);
+                //lift.setPower(-.7);
             } else {
-                lift.setPower(0);
+                //lift.setPower(0);
+                }
+
                 if (gamepad2.dpad_up) {
                     //Set the lift to the top position
+                    liftTarget = 1000;//lift.getCurrentPosition() + (int)(LIFT_HEIGHT * COUNTS_PER_INCH) / 20;
                 } else if (gamepad2.dpad_left) {
                     //Set the lift to middle junction height
+                    liftTarget = 500;
                 } else if (gamepad2.dpad_right) {
                     //Set the lift to the lowest junction height
+                    liftTarget = 250;
                 } else if (gamepad2.dpad_down) {
                     //Set the lift to ground position
+                    liftTarget = 0;
                 }
+                if(!(liftTarget > MAX_LIFT_HEIGHT)) {
+                    lift.setTargetPosition(liftTarget);
+                    lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    lift.setPower(.5);
+
+                while(lift.isBusy()) {
+                    telemetry.addData("lift", "Running at %7d",
+                            lift.getCurrentPosition());
+                    telemetry.update();
+                }
+                lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+               // lift.setPower(0);
+                }
+
                 if (gamepad2.a && closed) {
                     //Claw.setPosition(1);
                     sleep(550);
@@ -87,6 +119,6 @@ public class basicDriveControls extends LinearOpMode {
 
         }
     }
-}
+
 
 
