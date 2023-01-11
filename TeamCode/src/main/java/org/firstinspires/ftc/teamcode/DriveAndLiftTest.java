@@ -40,12 +40,17 @@ public class DriveAndLiftTest extends LinearOpMode {
         Fright.setDirection(DcMotorSimple.Direction.REVERSE);
         Bright.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         //Claw.setPosition(0);
 
         waitForStart();
+
+        int liftTarget = 0;
 
         //if (isStopRequested()) return;
 
@@ -53,8 +58,6 @@ public class DriveAndLiftTest extends LinearOpMode {
             double y = gamepad1.left_stick_y; // Remember, this is reversed!
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
-
-            int liftTarget = 0;
 
             if (gamepad2.right_bumper) {
                 //lift.setPower(.5);
@@ -66,7 +69,7 @@ public class DriveAndLiftTest extends LinearOpMode {
 
                 if (gamepad2.dpad_up) {
                     //Set the lift to the top position
-                    liftTarget = 1000;//lift.getCurrentPosition() + (int)(LIFT_HEIGHT * COUNTS_PER_INCH) / 20;
+                    liftTarget = 800;//lift.getCurrentPosition() + (int)(LIFT_HEIGHT * COUNTS_PER_INCH) / 20;
                 } else if (gamepad2.dpad_left) {
                     //Set the lift to middle junction height
                     liftTarget = 500;
@@ -79,15 +82,13 @@ public class DriveAndLiftTest extends LinearOpMode {
                 }
                 if(!(liftTarget > MAX_LIFT_HEIGHT)) {
                     lift.setTargetPosition(liftTarget);
-                    lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     lift.setPower(.5);
 
-                while(lift.isBusy()) {
+                if (lift.isBusy()) {
                     telemetry.addData("lift", "Running at %7d",
                             lift.getCurrentPosition());
-                    telemetry.update();
+                    // telemetry.update();
                 }
-                lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                // lift.setPower(0);
                 }
 
