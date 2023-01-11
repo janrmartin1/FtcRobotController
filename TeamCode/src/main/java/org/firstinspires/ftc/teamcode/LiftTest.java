@@ -11,6 +11,8 @@ public class LiftTest extends LinearOpMode {
     public void runOpMode(){
         DcMotor lift = hardwareMap.dcMotor.get("lift");
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         waitForStart();
         while(opModeIsActive()){
             if(gamepad1.a){
