@@ -29,7 +29,7 @@ public class DriveClawTestClass extends LinearOpMode {
         boolean closed = true;
         // Make sure your ID's match your configuration
 
-        DcMotor Fleft =  hardwareMap.dcMotor.get("Fleft");
+        DcMotorSimple Fleft =  hardwareMap.get(DcMotorSimple.class,"Fleft");
         DcMotor Bleft = hardwareMap.dcMotor.get("Bleft");
         DcMotor Fright = hardwareMap.dcMotor.get("Fright");
         DcMotor Bright = hardwareMap.dcMotor.get("Bright");
@@ -46,7 +46,7 @@ public class DriveClawTestClass extends LinearOpMode {
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
         //lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        Fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //Fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -70,11 +70,11 @@ public class DriveClawTestClass extends LinearOpMode {
 
 
             if (gamepad2.right_bumper) {
-                //lift.setPower(.5);
+                lift.setPower(.5);
             } else if (gamepad2.left_bumper) {
-                //lift.setPower(-.7);
+                lift.setPower(-.7);
             } else {
-                //lift.setPower(0);
+                lift.setPower(0);
             }
 
             if (gamepad2.dpad_up && runtime.seconds() > 1.0) {
@@ -83,11 +83,11 @@ public class DriveClawTestClass extends LinearOpMode {
                 runtime.reset();  //resets runtime delay timer
             } else if (gamepad2.dpad_left && runtime.seconds() > 1.0) {
                 //Set the lift to middle junction height
-                liftTarget = 500;
+                liftTarget = 600;
                 runtime.reset();  //resets runtime delay timer
             } else if (gamepad2.dpad_right && runtime.seconds() > 1.0) {
                 //Set the lift to the lowest junction height
-                liftTarget = 250;
+                liftTarget = 370; //26.32
                 runtime.reset();  //resets runtime delay timer
             } else if (gamepad2.dpad_down && runtime.seconds() > 1.0) {
                 //Set the lift to ground position
