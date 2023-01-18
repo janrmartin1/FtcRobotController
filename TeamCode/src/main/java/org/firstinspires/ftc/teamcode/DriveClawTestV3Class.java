@@ -10,7 +10,7 @@
     import org.firstinspires.ftc.robotcore.external.Telemetry;
 
     @TeleOp
-    public class DriveClawTestV2Class extends LinearOpMode {
+    public class DriveClawTestV3Class extends LinearOpMode {
         // variables
         static final double     COUNTS_PER_MOTOR_REV    = 288 ;    // eg: TETRIX Motor Encoder
         static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
@@ -25,8 +25,9 @@
         private double          frontRightPower = 0;    // declare motor power variable
         private double          backRightPower = 0;     // declare motor power variable
         private double          denominator = 1;        // declare motor power calculation variable
-        private int             precision = 4;          // chassis motor power reduction factor 1 = full 2 = half power 3 = third power 4 = quarter power
-        private double          liftPower = 0.5;        // declare lift power variable
+        private int             precision = 2;          // chassis motor power reduction factor 1 = full 2 = half power 3 = third power 4 = quarter power
+                                                        // ** 230118 set default speed to half power
+        private double          liftPower = 0.75;        // declare lift power variable ** 230118 increased from 0.50 for testing **
         private int             liftTarget = 0;         // declare lift target position variable
         private boolean         closed = false;          // declare claw status variable
 
@@ -45,12 +46,12 @@
             // Reverse the right side motors
             // Reverse left motors if you are using NeveRests
 
-            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
             Fright.setDirection(DcMotorSimple.Direction.REVERSE);
             Bright.setDirection(DcMotorSimple.Direction.REVERSE);
             lift.setDirection(DcMotorSimple.Direction.REVERSE);
-
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            
             //Fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);  // motor controller has a physical switch
             Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             Bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -59,8 +60,6 @@
             lift.setTargetPosition(0);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             Claw.setPosition(1);
-
-            // int liftTarget = 0;
 
             waitForStart();
 
@@ -78,11 +77,11 @@
 
                 if (gamepad2.dpad_up && runtime.seconds() > 1.0) {
                     //Set the lift to the top position
-                    liftTarget = 850; //lift.getCurrentPosition() + (int)(LIFT_HEIGHT * COUNTS_PER_INCH) / 20;
+                    liftTarget = 830; //lift.getCurrentPosition() + (int)(LIFT_HEIGHT * COUNTS_PER_INCH) / 20;   ** 230118 lowered from 850 **
                     runtime.reset();  //resets runtime delay timer
                 } else if (gamepad2.dpad_left && runtime.seconds() > 1.0) {
                     //Set the lift to middle junction height
-                    liftTarget = 600;
+                    liftTarget = 580;   // ** 230118 lowered from 600 **
                     runtime.reset();  //resets runtime delay timer
                 } else if (gamepad2.dpad_right && runtime.seconds() > 1.0) {
                     //Set the lift to the lowest junction height
@@ -94,12 +93,17 @@
                     runtime.reset();  //resets runtime delay timer
                 }
 
-                // check for lift height fine tuning
+                // check for lift height fine tuning and manual up or down 
 
-                if( (gamepad2.right_bumper) && (liftTarget + 10) < MAX_LIFT_HEIGHT){
-                    liftTarget = liftTarget + 10;    // push to raise the lift by small increments above preset positions
+                if( (gamepad2.right_bumper) && (liftTarget + 10) < MAX_LIFT_HEIGHT){     // 230118 set increment to a lower value to test
+                    liftTarget = liftTarget + 1;    // push to raise the lift by small increments above preset positions
                 }
-
+                if(gamepad2.x && !gamepad2.b && lift.getCurrentPosition() < 600){
+                    liftTarget = liftTarget + 1;    // constant increment of liftTarget while holding x
+                }
+                if(gamepad2.b && !gamepad2.a && lift.getCurrentPosition() < 600){
+                    liftTarget = liftTarget - 1;    // constant increment of liftTarget while holding x
+                }
                 // adjust lift height if within safe operating range
 
                 if(!(liftTarget > MAX_LIFT_HEIGHT)) {
@@ -131,9 +135,13 @@
                 // calculate motor movement math and adjust according to lift height or manual precision mode selection
 
                 denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+                precision = 2            // reset default speed to half power
                 if (lift.getCurrentPosition() > 450 || gamepad1.right_bumper) {   // check for manual or force precision driving mode
-                    denominator = denominator * precision;
+                    precision = 4;       // sets speed to one quarter power
+                } else if (lift.getCurrentPosition() =< 450 || gamepad1.left_bumper) {  // check for turbo mode when available at lower lift height
+                    precision = 1;       // sets speed to full power "TURBO" mode
                 }
+                denominator = denominator * precision;
                 frontLeftPower = (y + x + rx) / denominator;
                 backLeftPower = (y - x + rx) / denominator;
                 frontRightPower = (y - x - rx) / denominator;
