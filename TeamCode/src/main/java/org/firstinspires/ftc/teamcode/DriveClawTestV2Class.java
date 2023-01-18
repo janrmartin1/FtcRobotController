@@ -28,7 +28,7 @@ public class DriveClawTestV2Class extends LinearOpMode {
     private int             precision = 4;          // chassis motor power reduction factor 1 = full 2 = half power 3 = third power 4 = quarter power
     private double          liftPower = 0.5;        // declare lift power variable
     private int             liftTarget = 0;         // declare lift target position variable
-    private boolean         closed = true;          // declare claw status variable
+    private boolean         closed = false;          // declare claw status variable
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -58,7 +58,7 @@ public class DriveClawTestV2Class extends LinearOpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Claw.setPosition(0);
+        Claw.setPosition(1);
 
         // int liftTarget = 0;
 
@@ -96,7 +96,7 @@ public class DriveClawTestV2Class extends LinearOpMode {
 
             // check for lift height fine tuning
 
-            if (gamepad2.right_bumper) && (liftTarget + 10) < MAX_LIFT_HEIGHT{
+            if( (gamepad2.right_bumper) && (liftTarget + 10) < MAX_LIFT_HEIGHT){
                 liftTarget = liftTarget + 10;    // push to raise the lift by small increments above preset positions
             }
 
@@ -131,7 +131,7 @@ public class DriveClawTestV2Class extends LinearOpMode {
             // calculate motor movement math and adjust according to lift height or manual precision mode selection
 
             denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            if (lift.getCurrentPosition() > 450 .or. gamepad1.right_bumper) {   // check for manual or force precision driving mode
+            if (lift.getCurrentPosition() > 450 || gamepad1.right_bumper) {   // check for manual or force precision driving mode
                 denominator = denominator * precision;
             }
             frontLeftPower = (y + x + rx) / denominator;

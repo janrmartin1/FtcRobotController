@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -115,6 +116,8 @@ public class TFODparkingBackward extends LinearOpMode {
         DcMotor Bleft = hardwareMap.dcMotor.get("Bleft");
         DcMotor Fright = hardwareMap.dcMotor.get("Fright");
         DcMotor Bright = hardwareMap.dcMotor.get("Bright");
+        DcMotor lift = hardwareMap.dcMotor.get("lift");
+        Servo claw = hardwareMap.servo.get("Claw");
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
@@ -122,6 +125,15 @@ public class TFODparkingBackward extends LinearOpMode {
         Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Bright.setDirection(DcMotorSimple.Direction.REVERSE);
         Fright.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        claw.setPosition(1);
 
 
 
