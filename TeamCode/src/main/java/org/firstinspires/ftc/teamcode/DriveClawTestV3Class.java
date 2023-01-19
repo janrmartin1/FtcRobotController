@@ -101,7 +101,7 @@
                 if(gamepad2.x && !gamepad2.b && lift.getCurrentPosition() < 600){
                     liftTarget = liftTarget + 1;    // constant increment of liftTarget while holding x
                 }
-                if(gamepad2.b && !gamepad2.a && lift.getCurrentPosition() < 600){
+                if(gamepad2.b && !gamepad2.x && lift.getCurrentPosition() < 620 && liftTarget >= 1){
                     liftTarget = liftTarget - 1;    // constant increment of liftTarget while holding x
                 }
                 // adjust lift height if within safe operating range
@@ -135,10 +135,11 @@
                 // calculate motor movement math and adjust according to lift height or manual precision mode selection
 
                 denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                precision = 2            // reset default speed to half power
+                precision = 2;            // reset default speed to half power
                 if (lift.getCurrentPosition() > 450 || gamepad1.right_bumper) {   // check for manual or force precision driving mode
                     precision = 4;       // sets speed to one quarter power
-                } else if (lift.getCurrentPosition() =< 450 || gamepad1.left_bumper) {  // check for turbo mode when available at lower lift height
+                }
+                if (lift.getCurrentPosition() < 451 && gamepad1.left_bumper) {  // check for turbo mode when available at lower lift height
                     precision = 1;       // sets speed to full power "TURBO" mode
                 }
                 denominator = denominator * precision;

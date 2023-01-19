@@ -155,16 +155,18 @@ public class NewAndImprovedDrive extends LinearOpMode {
             if (lift.getCurrentPosition() > 450 || gamepad1.right_bumper) {   // check for manual or force precision driving mode
                 denominator = denominator * precision;
             }
+
+            frontLeftPower = (y + x + rx) / denominator;
+            backLeftPower = (y - x + rx) / denominator;
+            frontRightPower = (y - x - rx) / denominator;
+            backRightPower = (y + x - rx) / denominator;
+
             if (frontRightPower >= maxSpeed || frontLeftPower >= maxSpeed && !gamepad1.left_bumper){
                 frontLeftPower = maxSpeed;
                 frontRightPower = maxSpeed;
                 backRightPower = maxSpeed;
                 backLeftPower = maxSpeed;
             }
-            frontLeftPower = (y + x + rx) / denominator;
-            backLeftPower = (y - x + rx) / denominator;
-            frontRightPower = (y - x - rx) / denominator;
-            backRightPower = (y + x - rx) / denominator;
 
             // issue chassis power for movement
 
