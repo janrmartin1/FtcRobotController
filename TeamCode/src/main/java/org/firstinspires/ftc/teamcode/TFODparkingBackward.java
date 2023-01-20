@@ -214,20 +214,20 @@ public class TFODparkingBackward extends LinearOpMode {
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
             if (label == "1 Bolt") {
-                Fright.setPower(1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(1);
-                sleep(300);
+                Fright.setPower(.7);
+                Fleft.setPower(.7);
+                Bright.setPower(.7);
+                Bleft.setPower(.7);
+                sleep(1300);
                 Fright.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
                 sleep(100);
                 Fright.setPower(1);
-                Fleft.setPower(-.9);
-                Bright.setPower(-.75);
+                Fleft.setPower(-1);
+                Bright.setPower(-1);
                 Bleft.setPower(1);
-                sleep(625);
+                sleep(850);
                     /*
                     Fright.setPower(0);
                     Fleft.setPower(1);
@@ -247,11 +247,11 @@ public class TFODparkingBackward extends LinearOpMode {
             }
             //This is looking to see if the bulb has been detected and if it has it runs the code inside it
             else if (label == "2 Bulb") {
-                Fright.setPower(1);
-                Fleft.setPower(.9);
-                Bright.setPower(1);
-                Bleft.setPower(.9);
-                sleep(400);
+                Fright.setPower(.7);
+                Fleft.setPower(.7);
+                Bright.setPower(.7);
+                Bleft.setPower(.7);
+                sleep(1300);
                 Fright.setPower(0);
                 Fleft.setPower(0);
                 Bright.setPower(0);
@@ -260,11 +260,11 @@ public class TFODparkingBackward extends LinearOpMode {
             }
             //This is looking to see if the panel has been detected and if it has it runs the code inside it
             else if (label == "3 Panel") {
-                Fright.setPower(1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(1);
-                sleep(300);
+                Fright.setPower(.7);
+                Fleft.setPower(.7);
+                Bright.setPower(.7);
+                Bleft.setPower(.7);
+                sleep(900);
                 Fright.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
@@ -273,7 +273,7 @@ public class TFODparkingBackward extends LinearOpMode {
                 Fleft.setPower(1);
                 Bright.setPower(1);
                 Bleft.setPower(-1);
-                sleep(600);
+                sleep(800);
                     /*
                     Fright.setPower(0);
                     Fleft.setPower(1);

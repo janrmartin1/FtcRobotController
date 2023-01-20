@@ -192,6 +192,11 @@ public class TFODparkingV3 extends LinearOpMode {
                     Bright.setPower(1);
                     Bleft.setPower(1);
                     sleep(100);
+                    Fright.setPower(-1);
+                    Fleft.setPower(1);
+                    Bright.setPower(-1);
+                    Bleft.setPower(1);
+                    sleep(500);
                     Fright.setPower(0);
                     //Fleft.setPower(0);
                     Bright.setPower(0);
@@ -203,6 +208,11 @@ public class TFODparkingV3 extends LinearOpMode {
 
                 //This is looking to see if the bolt has been detected and if it has it runs the code inside it
                 if (label == "1 Bolt") {
+                    Fright.setPower(-1);
+                    Fleft.setPower(1);
+                    Bright.setPower(-1);
+                    Bleft.setPower(1);
+                    sleep(500);
                     Fright.setPower(1);
                     Fleft.setPower(1);
                     Bright.setPower(1);

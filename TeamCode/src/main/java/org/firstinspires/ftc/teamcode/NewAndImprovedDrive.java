@@ -96,7 +96,7 @@ public class NewAndImprovedDrive extends LinearOpMode {
                 runtime.reset();  //resets runtime delay timer
             }
 
-            if (gamepad1.x){
+            if (gamepad1.x && liftTarget <= 370){
                 if(manualConePickup == 5){ liftTarget = 350; }
                 else if(manualConePickup == 4){ liftTarget = 325; }
                 else if(manualConePickup == 3){ liftTarget = 300; }
@@ -105,7 +105,7 @@ public class NewAndImprovedDrive extends LinearOpMode {
                 else if(manualConePickup == 6){ manualConePickup = 1; }
                 manualConePickup += 1;
             }
-            else if (gamepad1.b){
+            else if (gamepad1.b && liftTarget <= 370){
                 if(manualConePickup == 5){ liftTarget = 350; }
                 else if(manualConePickup == 4){ liftTarget = 325; }
                 else if(manualConePickup == 3){ liftTarget = 300; }
@@ -114,6 +114,7 @@ public class NewAndImprovedDrive extends LinearOpMode {
                 else if(manualConePickup == 0){ manualConePickup = 5; }
                 manualConePickup -= 1;
             }
+            telemetry.addData("Side Stack Position", manualConePickup);
 
             // check for lift height fine tuning
 
