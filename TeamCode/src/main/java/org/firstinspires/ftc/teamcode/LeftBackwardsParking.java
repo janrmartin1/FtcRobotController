@@ -29,12 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static java.util.logging.Logger.global;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -57,8 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "TFOD_ParkingBackwards", group = "Concept")
-public class TFODparkingBackward extends LinearOpMode {
+@Autonomous(name = "Left Parking", group = "Concept")
+public class LeftBackwardsParking extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -142,17 +138,7 @@ public class TFODparkingBackward extends LinearOpMode {
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
-        if (tfod != null) {
-            tfod.activate();
 
-            // The TensorFlow software will scale the input images from the camera to a lower resolution.
-            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-            // If your target is at distance greater than 50 cm (20") you can increase the magnification value
-            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
-            // should be set to the value of the images used to create the TensorFlow Object Detection model
-            // (typically 16/9).
-            tfod.setZoom(1.0, 16.0 / 9.0);
-        }
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -168,6 +154,15 @@ public class TFODparkingBackward extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (tfod != null) {
+                tfod.activate();
+                // The TensorFlow software will scale the input images from the camera to a lower resolution.
+                // This can result in lower detection accuracy at longer distances (> 55cm or 22").
+                // If your target is at distance greater than 50 cm (20") you can increase the magnification value
+                // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
+                // should be set to the value of the images used to create the TensorFlow Object Detection model
+                // (typically 16/9).
+                tfod.setZoom(1.0, 16.0 / 9.0);
+
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -202,7 +197,7 @@ public class TFODparkingBackward extends LinearOpMode {
                 Fleft.setPower(1);
                 Bright.setPower(1);
                 Bleft.setPower(1);
-                sleep(100);
+                sleep(200);
                 Fright.setPower(0);
                 //Fleft.setPower(0);
                 Bright.setPower(0);
@@ -210,11 +205,23 @@ public class TFODparkingBackward extends LinearOpMode {
                 sleep(100);
                 Fleft.setPower(0);
                 sleep(5000);
+                if(label == null){break;}
             }
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
             if (label == "1 Bolt") {
-                Fright.setPower(.7);
+                /*
+                Fright.setPower(1);
+                Fleft.setPower(-1);
+                Bright.setPower(-1);
+                Bleft.setPower(1);
+                sleep(750);
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                break;
+               /* Fright.setPower(.7);
                 Fleft.setPower(.7);
                 Bright.setPower(.7);
                 Bleft.setPower(.7);
@@ -238,12 +245,12 @@ public class TFODparkingBackward extends LinearOpMode {
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(500);*/
+                    sleep(500);
                 Fright.setPower(0);
                 Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(9999999);
+                sleep(9999999);*/
             }
             //This is looking to see if the bulb has been detected and if it has it runs the code inside it
             else if (label == "2 Bulb") {
@@ -256,11 +263,23 @@ public class TFODparkingBackward extends LinearOpMode {
                 Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(999999);
+                break;
+
             }
             //This is looking to see if the panel has been detected and if it has it runs the code inside it
             else if (label == "3 Panel") {
-                Fright.setPower(.7);
+                /*
+                Fright.setPower(1);
+                Fleft.setPower(-1);
+                Bright.setPower(-1);
+                Bleft.setPower(1);
+                sleep(750);
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                break;
+                /*Fright.setPower(.7);
                 Fleft.setPower(.7);
                 Bright.setPower(.7);
                 Bleft.setPower(.7);
@@ -284,12 +303,12 @@ public class TFODparkingBackward extends LinearOpMode {
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(500);*/
+                    sleep(500);
                 Fright.setPower(0);
                 Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(9999999);
+                sleep(9999999);*/
             }
             else {
                 Fright.setPower(0);

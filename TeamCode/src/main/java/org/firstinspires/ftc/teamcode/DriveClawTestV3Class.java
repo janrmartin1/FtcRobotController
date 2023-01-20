@@ -9,7 +9,7 @@
 
     import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-    @TeleOp
+    @TeleOp(name = "MAIN DRIVE")
     public class DriveClawTestV3Class extends LinearOpMode {
         // variables
         static final double     COUNTS_PER_MOTOR_REV    = 288 ;    // eg: TETRIX Motor Encoder
