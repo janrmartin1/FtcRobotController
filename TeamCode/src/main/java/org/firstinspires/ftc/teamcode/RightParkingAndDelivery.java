@@ -262,10 +262,12 @@ public class RightParkingAndDelivery extends LinearOpMode {
                     Bleft.setPower(.5);
                     sleep(150);
                     i++;
+                    if(i >= 5){
+                        parkYet = true;
+                        deliverYet = false;
+                    }
                 }
-                if(i >= 5){
-                    parkYet = true;
-                }
+
             }
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
