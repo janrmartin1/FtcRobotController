@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous
-public class redHighJuncParkCorner extends LinearOpMode {
+public class EmergencyBackupFile extends LinearOpMode {
 
     @Override
     public void runOpMode(){
