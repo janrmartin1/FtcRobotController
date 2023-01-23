@@ -30,6 +30,7 @@
         private double          liftPower = 0.75;        // declare lift power variable ** 230118 increased from 0.50 for testing **
         private int             liftTarget = 0;         // declare lift target position variable
         private boolean         closed = false;          // declare claw status variable
+        private boolean         liftTurbo = false;
 
         @Override
         public void runOpMode() throws InterruptedException {
@@ -105,6 +106,9 @@
                     liftTarget = liftTarget - 1;    // constant increment of liftTarget while holding x
                 }
                 // adjust lift height if within safe operating range
+
+                if(gamepad1.y && !liftTurbo){liftPower = 1; sleep(100);}
+                else if(gamepad1.y && liftTurbo){liftPower = 0.75; sleep(100);}
 
                 if(!(liftTarget > MAX_LIFT_HEIGHT)) {
                     lift.setTargetPosition(liftTarget);
