@@ -107,7 +107,7 @@
                 }
                 // adjust lift height if within safe operating range
 
-                if(liftTarget >= lift.getCurrentPosition()){liftPower = 1;}
+                if(liftTarget > lift.getCurrentPosition()){liftPower = 1;}
                 else{liftPower = 0.75;}
 
                 if(!(liftTarget > MAX_LIFT_HEIGHT)) {
