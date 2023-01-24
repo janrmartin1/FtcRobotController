@@ -107,8 +107,8 @@
                 }
                 // adjust lift height if within safe operating range
 
-                if(gamepad1.y && !liftTurbo){liftPower = 1; sleep(100);}
-                else if(gamepad1.y && liftTurbo){liftPower = 0.75; sleep(100);}
+                if(liftTarget >= lift.getCurrentPosition()){liftPower = 1;}
+                else{liftPower = 0.75;}
 
                 if(!(liftTarget > MAX_LIFT_HEIGHT)) {
                     lift.setTargetPosition(liftTarget);

@@ -288,6 +288,13 @@ public class RightParkingAndDelivery extends LinearOpMode {
                 }
 
             }
+            if(liftTarget >= lift.getCurrentPosition()){liftPower = 1;}//Sets the speed of the lift whether it is going up or down
+            else{liftPower = 0.75;}
+
+            if(lift.getCurrentPosition() != liftTarget && liftTarget < MAX_LIFT_HEIGHT){//Moves the lift up or down by liftTarget
+                lift.setTargetPosition(liftTarget);
+                lift.setPower(liftPower);
+            }
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
             if (label == "1 Bolt" && parkYet == true) {
