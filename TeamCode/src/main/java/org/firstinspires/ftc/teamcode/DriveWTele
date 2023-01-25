@@ -138,7 +138,7 @@
                 telemetry.addline()
                     addData("BR value",Bright.getPosition())
                     addData("BL value",Bleft.getPosition());
-                telemetry.addData("Drive by Button", driveByButton);
+ 
                 telemetry.update();
 
                 // calculate motor movement math and adjust according to lift height or manual precision mode selection
