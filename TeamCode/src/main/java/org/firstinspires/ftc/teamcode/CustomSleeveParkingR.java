@@ -53,8 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Backwards Right Parking Control Scan", group = "Concept")
-public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
+@Autonomous(name = "BackwardsR Custom Parking", group = "Concept")
+public class CustomSleeveParkingR extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -67,8 +67,6 @@ public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     String label = null;
-    boolean scanYet = false;
-    boolean moveYet = true;
 
     private static final String[] LABELS = {
             "1 Bolt",
@@ -165,7 +163,7 @@ public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (tfod != null && scanYet == true) {
+            if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -185,8 +183,6 @@ public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
                         telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
 
-                        moveYet = false;
-
                         if(recognition.getConfidence() >= .7){
                             label = recognition.getLabel();
                         }
@@ -197,7 +193,7 @@ public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
                 }
 
             }
-            if(label == null && moveYet == true){
+            if(label == null){
                 Fright.setPower(1);
                 Fleft.setPower(1);
                 Bright.setPower(1);
@@ -210,7 +206,6 @@ public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
                 sleep(100);
                 Fleft.setPower(0);
                 sleep(5000);
-                scanYet = true;
             }
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
@@ -353,7 +348,7 @@ public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
+        //tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }

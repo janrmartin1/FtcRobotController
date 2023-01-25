@@ -53,7 +53,7 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Right Parking", group = "Concept")
+@Autonomous(name = "Backwards Right Parking", group = "Concept")
 public class RightBackwardsParking extends LinearOpMode {
 
     /*
