@@ -203,7 +203,6 @@ public class RightBackwardsParking extends LinearOpMode {
                 //Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(100);
                 Fleft.setPower(0);
                 sleep(5000);
             }

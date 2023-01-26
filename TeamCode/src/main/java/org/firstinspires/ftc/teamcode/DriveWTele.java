@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp(name = "TEST DRIVE W/tele")
-public class DriveWtele extends LinearOpMode {
+public class DriveWTele extends LinearOpMode {
     // variables
     static final double     COUNTS_PER_MOTOR_REV    = 288 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
@@ -135,9 +135,9 @@ public class DriveWtele extends LinearOpMode {
 
             telemetry.addData("Position", closed);
             telemetry.addData("Servo Position", Claw.getPosition());
-            telemetry.addline()
-            addData("BR value",Bright.getPosition())
-            addData("BL value",Bleft.getPosition());
+            telemetry.addLine()
+                .addData("BR value", Bright.getCurrentPosition())
+                .addData("BL value", Bleft.getCurrentPosition());
 
             telemetry.update();
 

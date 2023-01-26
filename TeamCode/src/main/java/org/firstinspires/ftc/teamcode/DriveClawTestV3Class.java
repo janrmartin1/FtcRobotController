@@ -134,6 +134,7 @@
 
                 telemetry.addData("Position", closed);
                 telemetry.addData("Servo Position", Claw.getPosition());
+                telemetry.addData("Lift Power", liftPower);
                 telemetry.update();
 
                 // calculate motor movement math and adjust according to lift height or manual precision mode selection

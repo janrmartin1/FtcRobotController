@@ -69,6 +69,7 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
     String label = null;
     boolean scanYet = false;
     boolean moveYet = true;
+    boolean firstGo = true;
 
     private static final String[] LABELS = {
             "1 Bolt",
@@ -119,8 +120,10 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        Fright.setDirection(DcMotorSimple.Direction.REVERSE);
+        Bright.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -130,8 +133,6 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         claw.setPosition(1);
-
-
 
 
         /**
@@ -161,8 +162,11 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
         //Bright.setPower(1);
         //Bleft.setPower(1);
 
+
         while (opModeIsActive()) {
 
+            telemetry.addData("scanYet", scanYet);
+            telemetry.addData("moveYet", moveYet);
             if (tfod != null && scanYet == true) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -185,7 +189,7 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
 
                         moveYet = false;
 
-                        if(recognition.getConfidence() >= .7){
+                        if(recognition.getConfidence() >= .8){
                             label = recognition.getLabel();
                         }
 
@@ -195,33 +199,53 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
                 }
 
             }
-            if(label == null && moveYet == true){
-                Fright.setPower(1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(1);
-                sleep(200);
+            if(label == null && moveYet == true && firstGo == true){
+                claw.setPosition(0);
+                sleep(50);
+                lift.setTargetPosition(20);
+                lift.setPower(1);
+                Fright.setPower(-.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(-.5);
+                sleep(350);
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
+                sleep(100);
+                Fright.setPower(-.5);
+                Fleft.setPower(.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(.5);
+                sleep(1600);
                 Fright.setPower(0);
                 //Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(100);
                 Fleft.setPower(0);
                 sleep(5000);
                 scanYet = true;
+                firstGo = false;
             }
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
             if (label == "1 Bolt") {
-                Fright.setPower(-1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(-1);
-                sleep(800);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
+                Fright.setPower(.45);
+                Fleft.setPower(-.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(.45);
+                sleep(1600);
+                Fright.setPower(.5);
+                Fleft.setPower(.5);
+                Bright.setPower(.5);
+                Bleft.setPower(.5);
+                sleep(1300);
+                Fright.setPower(.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(.5);
+                Bleft.setPower(-.5);
+                sleep(1000);
                 break;
                /* Fright.setPower(.7);
                 Fleft.setPower(.7);
@@ -256,28 +280,35 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
             }
             //This is looking to see if the bulb has been detected and if it has it runs the code inside it
             else if (label == "2 Bulb") {
-                Fright.setPower(.7);
-                Fleft.setPower(.7);
-                Bright.setPower(.7);
-                Bleft.setPower(.7);
-                sleep(1300);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(999999);
+                Fright.setPower(.4);
+                Fleft.setPower(.4);
+                Bright.setPower(.4);
+                Bleft.setPower(.4);
+                sleep(2500);
+                Fright.setPower(.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(.5);
+                Bleft.setPower(-.5);
+                sleep(1000);
+                break;
             }
             //This is looking to see if the panel has been detected and if it has it runs the code inside it
             else if (label == "3 Panel") {
-                Fright.setPower(-1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(-1);
-                sleep(800);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
+                Fright.setPower(-.5);
+                Fleft.setPower(.45);
+                Bright.setPower(.45);
+                Bleft.setPower(-.5);
+                sleep(1600);
+                Fright.setPower(.5);
+                Fleft.setPower(.5);
+                Bright.setPower(.5);
+                Bleft.setPower(.5);
+                sleep(1300);
+                Fright.setPower(.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(.5);
+                Bleft.setPower(-.5);
+                sleep(1000);
                 break;
                 /*Fright.setPower(.7);
                 Fleft.setPower(.7);
