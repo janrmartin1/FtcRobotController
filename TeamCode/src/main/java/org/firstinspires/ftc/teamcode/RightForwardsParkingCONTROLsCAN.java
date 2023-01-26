@@ -132,7 +132,7 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        claw.setPosition(1);
+        claw.setPosition(0);
 
 
         /**
@@ -200,7 +200,7 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
 
             }
             if(label == null && moveYet == true && firstGo == true){
-                claw.setPosition(0);
+                claw.setPosition(1);
                 sleep(50);
                 lift.setTargetPosition(20);
                 lift.setPower(1);

@@ -60,7 +60,7 @@
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             lift.setTargetPosition(0);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Claw.setPosition(1);
+            Claw.setPosition(0);
 
             waitForStart();
 

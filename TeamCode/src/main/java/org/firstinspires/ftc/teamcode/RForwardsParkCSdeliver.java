@@ -29,16 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static java.util.logging.Logger.global;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -58,27 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Disabled
-@Autonomous(name = "TallRedRightTFOD", group = "Concept")
-public class TallRedRightTFOD extends LinearOpMode {
-    // variables
-    static final double     COUNTS_PER_MOTOR_REV    = 288 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = .5 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     LIFT_HEIGHT                = (int)40 * 22.388; //22 time
-    static final double     MAX_LIFT_HEIGHT         = 1000;;
-    private ElapsedTime     runtime = new ElapsedTime();    // sets up a timer function
-    private ElapsedTime     runtime2 = new ElapsedTime();    // sets up a timer function
-    private double          frontLeftPower = 0;     // declare motor power variable
-    private double          backLeftPower = 0;      // declare motor power variable
-    private double          frontRightPower = 0;    // declare motor power variable
-    private double          backRightPower = 0;     // declare motor power variable
-    private double          denominator = 1;        // declare motor power calculation variable
-    private int             precision = 4;          // chassis motor power reduction factor 1 = full 2 = half power 3 = third power 4 = quarter power
-    private double          liftPower = 0.5;        // declare lift power variable
-    private int             liftTarget = 0;         // declare lift target position variable
-    private boolean         closed = false;          // declare claw status variable
+@Autonomous(name = "Autonomous with delivery", group = "Concept")
+public class RForwardsParkCSdeliver extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -91,6 +67,11 @@ public class TallRedRightTFOD extends LinearOpMode {
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
     String label = null;
+    boolean scanYet = false;
+    boolean moveYet = true;
+    boolean firstGo = true;
+    boolean deliver = false;
+    boolean park = false;
 
     private static final String[] LABELS = {
             "1 Bolt",
@@ -141,10 +122,10 @@ public class TallRedRightTFOD extends LinearOpMode {
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        Bright.setDirection(DcMotorSimple.Direction.REVERSE);
         Fright.setDirection(DcMotorSimple.Direction.REVERSE);
+        Bright.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -153,9 +134,7 @@ public class TallRedRightTFOD extends LinearOpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        claw.setPosition(1);
-
-
+        claw.setPosition(0);
 
 
         /**
@@ -185,9 +164,12 @@ public class TallRedRightTFOD extends LinearOpMode {
         //Bright.setPower(1);
         //Bleft.setPower(1);
 
+
         while (opModeIsActive()) {
 
-            if (tfod != null) {
+            telemetry.addData("scanYet", scanYet);
+            telemetry.addData("moveYet", moveYet);
+            if (tfod != null && scanYet == true) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -207,7 +189,11 @@ public class TallRedRightTFOD extends LinearOpMode {
                         telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
 
-                        if(recognition.getConfidence() >= .7){
+                        moveYet = false;
+                        scanYet = false;
+                        deliver = true;
+
+                        if(recognition.getConfidence() >= .8){
                             label = recognition.getLabel();
                         }
 
@@ -217,93 +203,98 @@ public class TallRedRightTFOD extends LinearOpMode {
                 }
 
             }
-            if(label == null){
-                Fright.setPower(1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(1);
+            if(label == null && moveYet == true && firstGo == true){
+                claw.setPosition(1);
+                sleep(50);
+                lift.setTargetPosition(20);
+                lift.setPower(1);
+                Fright.setPower(-.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(-.5);
+                sleep(350);
+                Fright.setPower(0);
+                Fleft.setPower(0);
+                Bright.setPower(0);
+                Bleft.setPower(0);
                 sleep(100);
+                Fright.setPower(-.5);
+                Fleft.setPower(.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(.5);
+                sleep(1600);
                 Fright.setPower(0);
                 //Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(100);
                 Fleft.setPower(0);
                 sleep(5000);
+                scanYet = true;
+                firstGo = false;
             }
-            Fright.setPower(1);
-            Fleft.setPower(1);
-            Bright.setPower(1);
-            Bleft.setPower(1);
-            sleep(200);
-            Fright.setPower(1);
-            Fleft.setPower(-1);
-            Bright.setPower(-1);
-            Bleft.setPower(1);
-            sleep(1200);
-            Fright.setPower(1);
-            Fleft.setPower(-1);
-            Bright.setPower(1);
-            Bleft.setPower(-1);
-            sleep(500);
-            Fright.setPower(0);
-            Fleft.setPower(0);
-            Bright.setPower(0);
-            Bleft.setPower(0);
-            liftTarget = 850;
-            sleep(3000);
-            Fright.setPower(-.3);
-            Fleft.setPower(-.3);
-            Bright.setPower(-.3);
-            Bleft.setPower(-.3);
-            sleep(300);
-            claw.setPosition(1);
-            sleep(100);
-            Fright.setPower(.3);
-            Fleft.setPower(.3);
-            Bright.setPower(.3);
-            Bleft.setPower(.3);
-            sleep(300);
-            liftTarget = 0;
-            Fright.setPower(0);
-            Fleft.setPower(0);
-            Bright.setPower(0);
-            Bleft.setPower(0);
-            sleep(2500);
-            Fright.setPower(1);
-            Fleft.setPower(-1);
-            Bright.setPower(1);
-            Bleft.setPower(-1);
-            sleep(500);
-            Fright.setPower(-1);
-            Fleft.setPower(1);
-            Bright.setPower(1);
-            Bleft.setPower(-1);
-            sleep(1200);
-            Fright.setPower(-1);
-            Fleft.setPower(-1);
-            Bright.setPower(-1);
-            Bleft.setPower(-1);
-            sleep(200);
-
-
+            if(label != null && deliver == true){
+                Fright.setPower(.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(.5);
+                Bleft.setPower(-.5);
+                lift.setTargetPosition(370);
+                lift.setPower(1);
+                sleep(1000);
+                Fright.setPower(-.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(-.5);
+                sleep(200);
+                claw.setPosition(0);
+                sleep(50);
+                Fright.setPower(.5);
+                Fleft.setPower(.5);
+                Bright.setPower(.5);
+                Bleft.setPower(.5);
+                sleep(200);
+                Fright.setPower(-.5);
+                Fleft.setPower(.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(.5);
+                claw.setPosition(1);
+                lift.setTargetPosition(0);
+                lift.setPower(1);
+                park = true;
+                deliver = false;
+            }
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
-            if (label == "1 Bolt") {
-                Fright.setPower(1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(1);
-                sleep(300);
+            if (label == "1 Bolt" && park == true) {
+                Fright.setPower(.45);
+                Fleft.setPower(-.5);
+                Bright.setPower(-.5);
+                Bleft.setPower(.45);
+                sleep(1600);
+                Fright.setPower(.5);
+                Fleft.setPower(.5);
+                Bright.setPower(.5);
+                Bleft.setPower(.5);
+                sleep(1300);
+                Fright.setPower(.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(.5);
+                Bleft.setPower(-.5);
+                sleep(1000);
+                break;
+               /* Fright.setPower(.7);
+                Fleft.setPower(.7);
+                Bright.setPower(.7);
+                Bleft.setPower(.7);
+                sleep(1300);
                 Fright.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
                 sleep(100);
                 Fright.setPower(1);
-                Fleft.setPower(-.9);
-                Bright.setPower(-.75);
+                Fleft.setPower(-1);
+                Bright.setPower(-1);
                 Bleft.setPower(1);
-                sleep(625);
+                sleep(850);
                     /*
                     Fright.setPower(0);
                     Fleft.setPower(1);
@@ -314,33 +305,50 @@ public class TallRedRightTFOD extends LinearOpMode {
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(500);*/
+                    sleep(500);
                 Fright.setPower(0);
                 Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(9999999);
+                sleep(9999999);*/
             }
             //This is looking to see if the bulb has been detected and if it has it runs the code inside it
-            else if (label == "2 Bulb") {
-                Fright.setPower(1);
-                Fleft.setPower(.9);
-                Bright.setPower(1);
-                Bleft.setPower(.9);
-                sleep(400);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(999999);
+            else if (label == "2 Bulb" && park == true) {
+                Fright.setPower(.4);
+                Fleft.setPower(.4);
+                Bright.setPower(.4);
+                Bleft.setPower(.4);
+                sleep(2500);
+                Fright.setPower(.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(.5);
+                Bleft.setPower(-.5);
+                sleep(1000);
+                break;
             }
             //This is looking to see if the panel has been detected and if it has it runs the code inside it
-            else if (label == "3 Panel") {
-                Fright.setPower(1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(1);
-                sleep(300);
+            else if (label == "3 Panel" && park == true) {
+                Fright.setPower(-.5);
+                Fleft.setPower(.45);
+                Bright.setPower(.45);
+                Bleft.setPower(-.5);
+                sleep(1600);
+                Fright.setPower(.5);
+                Fleft.setPower(.5);
+                Bright.setPower(.5);
+                Bleft.setPower(.5);
+                sleep(1300);
+                Fright.setPower(.5);
+                Fleft.setPower(-.5);
+                Bright.setPower(.5);
+                Bleft.setPower(-.5);
+                sleep(1000);
+                break;
+                /*Fright.setPower(.7);
+                Fleft.setPower(.7);
+                Bright.setPower(.7);
+                Bleft.setPower(.7);
+                sleep(900);
                 Fright.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
@@ -349,7 +357,7 @@ public class TallRedRightTFOD extends LinearOpMode {
                 Fleft.setPower(1);
                 Bright.setPower(1);
                 Bleft.setPower(-1);
-                sleep(600);
+                sleep(800);
                     /*
                     Fright.setPower(0);
                     Fleft.setPower(1);
@@ -360,12 +368,12 @@ public class TallRedRightTFOD extends LinearOpMode {
                     Fleft.setPower(1);
                     Bright.setPower(1);
                     Bleft.setPower(1);
-                    sleep(500);*/
+                    sleep(500);
                 Fright.setPower(0);
                 Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(9999999);
+                sleep(9999999);*/
             }
             else {
                 Fright.setPower(0);
