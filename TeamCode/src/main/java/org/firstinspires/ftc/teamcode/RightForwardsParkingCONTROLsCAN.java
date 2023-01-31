@@ -192,7 +192,7 @@ public class RightForwardsParkingCONTROLsCAN extends LinearOpMode {
                         if(recognition.getConfidence() >= .8){
                             label = recognition.getLabel();
                         }
-
+                        telemetry.update(); 
                     }
 
 

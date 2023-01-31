@@ -223,7 +223,7 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                             Bright.setPower(0);
                             Bleft.setPower(0);
                         }
-
+                        telemetry.update();
                     }
 
 

@@ -185,7 +185,7 @@ public class LeftBackwardsParking extends LinearOpMode {
                         if(recognition.getConfidence() >= .7){
                             label = recognition.getLabel();
                         }
-
+                        telemetry.update();
                     }
 
 
