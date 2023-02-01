@@ -203,6 +203,7 @@ public class RForwardsParkCSdeliver extends LinearOpMode {
                 }
 
             }
+
             if(label == null && moveYet == true && firstGo == true){
                 claw.setPosition(1);
                 sleep(50);

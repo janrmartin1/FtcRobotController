@@ -30,15 +30,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
@@ -49,14 +48,13 @@ import java.util.List;
  * determine which image is being presented to the robot.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  *
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Disabled
-@Autonomous(name = "Backwards Right Parking And Deliver", group = "Concept")
-public class BackwardsRightParkingAndDelivery extends LinearOpMode {
+@Autonomous(name = "Auton with Delivery", group = "Concept")
+public class BackRparkDeliver extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -65,9 +63,8 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
      * has been downloaded to the Robot Controller's SD FLASH memory, it must to be loaded using loadModelFromFile()
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
-    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
-    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
-
+    private static final String TFOD_MODEL_ASSET = "CustomSleeveV2.tflite";
+    //private static final String TFOD_MODEL_FILE  = "C:\\Users\\FTC A\\Desktop\\FtcRobotController\\FtcRobotController\\src\\main\\assets\\CustomSleeveV3.tflite";
     static final double     LIFT_HEIGHT                = (int)40 * 22.388; //22 time
     static final double     MAX_LIFT_HEIGHT         = 1000;;
 
@@ -84,11 +81,10 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
     private int previousLiftTarget = liftTarget;
 
     private static final String[] LABELS = {
-            "1 Bolt",
-            "2 Bulb",
-            "3 Panel"
+            "black1",
+            "green2",
+            "purple3"
     };
-
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -103,7 +99,11 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY =
-            "AQeqctv/////AAABmcheFpUrvEpYg1bT/7gYJZ05yezUO4K5a8GbBMHpHZsTZJmY1wFdUqsOfNbxQamxzJOP/uu5xUXtWmz22anWHk63K+of7qzB3t6L6bHGkXQlaDJhxcEnLgLzGH/tstClC6UNOU+oJecuxvgkG+Mc/UNRlwtsQvGh50Ha2o47szXNiF+oTUYjW3Vftd3/yVKrQn6qCvExwJFsiXAG6FixEii31yHl3GP2Z/MFgcH0TREzcN2cdfcLoyIvyJT71xxGVfXzjTXp3uMk6zgr7hCQ93OBm1QngV7uuhAx7BI9V1xv9hEJW3wKq/fVMeIRz6zeMBQk1bMw5hTvW/2fZ0o8PBV5QSRJ6V8Sw8AGMEr8B8AV";
+            "AQeqctv/////AAABmcheFpUrvEpYg1bT/7gYJZ05yezUO4K5a8GbBMHpHZsTZJmY1wFdUqsOfNbxQamxzJ" +
+                    "OP/uu5xUXtWmz22anWHk63K+of7qzB3t6L6bHGkXQlaDJhxcEnLgLzGH/tstClC6UNOU+oJecuxvgkG+Mc/UNRlwt" +
+                    "sQvGh50Ha2o47szXNiF+oTUYjW3Vftd3/yVKrQn6qCvExwJFsiXAG6FixEii31yHl3GP2Z/MFgcH0TREzcN2cdfcLo" +
+                    "yIvyJT71xxGVfXzjTXp3uMk6zgr7hCQ93OBm1QngV7u" +
+                    "uhAx7BI9V1xv9hEJW3wKq/fVMeIRz6zeMBQk1bMw5hTvW/2fZ0o8PBV5QSRJ6V8Sw8AGMEr8B8AV";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -123,7 +123,6 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
         // first.
         initVuforia();
         initTfod();
-        //Here we declare all the motors and servos
         DcMotorSimple Fleft =  hardwareMap.get(DcMotorSimple.class,"Fleft");
         DcMotor Bleft = hardwareMap.dcMotor.get("Bleft");
         DcMotor Fright = hardwareMap.dcMotor.get("Fright");
@@ -133,13 +132,12 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
         Bright.setDirection(DcMotorSimple.Direction.REVERSE);
         Fright.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //setting all the modes of the motors and setting starting positions for the lift and claw
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -150,13 +148,10 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
         claw.setPosition(0);
 
 
-
-
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
-        //Initializing TensorFlow
         if (tfod != null) {
             tfod.activate();
 
@@ -178,7 +173,8 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
             while (opModeIsActive()) {
                 telemetry.addData("scanYet", scanYet);
                 telemetry.addData("moveYet", moveYet);
-                if (tfod != null) {
+                telemetry.addData("Label", label);
+                if (tfod != null && scanYet) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -220,251 +216,146 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                                 Bleft.setPower(0);
                             }
                         }
+
                         telemetry.update();
                     }
-
-
                 }
-
-            }
-            if(label == null && moveYet == true){
-                Fright.setPower(.5);
-                Fleft.setPower(.5);//moves forward so it can be close enough to scan the cone
-                Bright.setPower(.5);
-                Bleft.setPower(.5);
-                sleep(400);
-                Fright.setPower(0);
-                //Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                Fleft.setPower(0);
-                scanYet = true; //sets scanYet to true so it will scan the cone up above
-
-            }
-            else if (deliverYet == true){
-                while(i <= 5){//Anything in this loop will only loop 5 times
-                    Fright.setPower(-.5);
-                    Fleft.setPower(-.5);
-                    Bright.setPower(-.5);//This starts facing the side stack and will move forwards towards the side stacks
-                    Bleft.setPower(-.5);
-                        sleep(300);
-                    if(liftTarget == 0){liftTarget = 375;}//This is setting the lift target to the low junction
-                    else{liftTarget = previousLiftTarget;}//After delivering the cone it will reset it to the position it picked the last cone up from
-                    liftTarget = liftTarget - 25;//This is lowering the lift everytime it goes back for a cone so it will pick up the next cone
-                    previousLiftTarget = liftTarget;//previousLiftTarget is saving the position of the cone it just picked up so it will set it back to that and lower it from it to grab the next cone
-                    claw.setPosition(1);//This is opening the claw
-                        sleep(50);
+                if(label == null && moveYet == true){
+                    Fright.setPower(.5);
+                    Fleft.setPower(.5);//moves forward so it can be close enough to scan the cone
+                    Bright.setPower(.5);
+                    Bleft.setPower(.5);
+                    sleep(400);
                     Fright.setPower(0);
-                    Fleft.setPower(0);
-                    Bright.setPower(0);//This is stopping all the motors
+                    //Fleft.setPower(0);
+                    Bright.setPower(0);
                     Bleft.setPower(0);
-                    liftTarget = 375;//Setting the lift target to the lowest junction
-                        sleep(200);
-                    Fright.setPower(.5);
-                    Fleft.setPower(.5);//Moves backwards to the lowest junction
-                    Bright.setPower(.5);
-                    Bleft.setPower(.5);
-                        sleep(300);
-                    Fright.setPower(.5);
-                    Fleft.setPower(-.5);//Turns towards the lowest junction
-                    Bright.setPower(.5);
-                    Bleft.setPower(-.5);
-                        sleep(150);
-                    claw.setPosition(0);//Opens the claw to drop the cone
-                        sleep(150);
-                    Fright.setPower(-.5);
-                    Fleft.setPower(.5);//Turns back to face the stacks
-                    Bright.setPower(-.5);
-                    Bleft.setPower(.5);
-                        sleep(150);
-                    i++;//Adds 1 to i so it will add up and when it = 5 it will stop the loop
-                    if(i >= 5){
-                        Fright.setPower(.5);
-                        Fleft.setPower(.5);
-                        Bright.setPower(.5);//This will move it backwards
-                        Bleft.setPower(.5);
-                        sleep(100);
+                    Fleft.setPower(0);
+                    scanYet = true; //sets s
+                }
+                else if (deliverYet == true){
+                    while(i <= 5){//Anything in this loop will only loop 5 times
                         Fright.setPower(-.5);
-                        Fleft.setPower(.5);//This will turn it back to it's original spot
+                        Fleft.setPower(-.5);
+                        Bright.setPower(-.5);//This starts facing the side stack and will move forwards towards the side stacks
+                        Bleft.setPower(-.5);
+                        sleep(300);
+                        if(liftTarget == 0){liftTarget = 375;}//This is setting the lift target to the low junction
+                        else{liftTarget = previousLiftTarget;}//After delivering the cone it will reset it to the position it picked the last cone up from
+                        liftTarget = liftTarget - 25;//This is lowering the lift everytime it goes back for a cone so it will pick up the next cone
+                        previousLiftTarget = liftTarget;//previousLiftTarget is saving the position of the cone it just picked up so it will set it back to that and lower it from it to grab the next cone
+                        lift.setTargetPosition(liftTarget);
+                        lift.setPower(1);
+                        claw.setPosition(1);//This is opening the claw
+                        sleep(150)
+                        Fright.setPower(0);
+                        Fleft.setPower(0);
+                        Bright.setPower(0);//This is stopping all the motors
+                        Bleft.setPower(0);
+                        liftTarget = 375;//Setting the lift target to the lowest junction
+                        lift.setTargetPosition(liftTarget);
+                        lift.setPower(1);
+                        sleep(200);
+                        Fright.setPower(.5);
+                        Fleft.setPower(.5);//Moves backwards to the lowest junction
+                        Bright.setPower(.5);
+                        Bleft.setPower(.5);
+                        sleep(300);
+                        Fright.setPower(.5);
+                        Fleft.setPower(-.5);//Turns towards the lowest junction
+                        Bright.setPower(.5);
+                        Bleft.setPower(-.5);
+                        sleep(150);
+                        claw.setPosition(0);//Opens the claw to drop the cone
+                        sleep(150);
+                        Fright.setPower(-.5);
+                        Fleft.setPower(.5);//Turns back to face the stacks
                         Bright.setPower(-.5);
                         Bleft.setPower(.5);
-                        sleep(800);
-                        Fright.setPower(.4);
-                        Fleft.setPower(.4);
-                        Bright.setPower(.4);
-                        Bleft.setPower(.4);
-                        sleep(2300);
-                        parkYet = true;//Will let it park from where it is at
-                        deliverYet = false;//Stops the loop so it can't deliver anymore cones
+                        sleep(150);
+                        i++;//Adds 1 to i so it will add up and when it = 5 it will stop the loop
+                        if(i >= 5){
+                            Fright.setPower(.5);
+                            Fleft.setPower(.5);
+                            Bright.setPower(.5);//This will move it backwards
+                            Bleft.setPower(.5);
+                            sleep(100);
+                            Fright.setPower(-.5);
+                            Fleft.setPower(.5);//This will turn it back to it's original spot
+                            Bright.setPower(-.5);
+                            Bleft.setPower(.5);
+                            sleep(800);
+                            Fright.setPower(.4);
+                            Fleft.setPower(.4);
+                            Bright.setPower(.4);
+                            Bleft.setPower(.4);
+                            sleep(2300);
+                            parkYet = true;//Will let it park from where it is at
+                            deliverYet = false;//Stops the loop so it can't deliver anymore cones
+                        }
                     }
+
+                //This is looking to see if the bolt has been detected and if it has it runs the code inside it
+                if (label == "black1") {
+                    Fright.setPower(.45);
+                    Fleft.setPower(-.5);
+                    Bright.setPower(-.5);
+                    Bleft.setPower(.45);
+                    sleep(1600);
+                    Fright.setPower(.5);
+                    Fleft.setPower(.5);
+                    Bright.setPower(.5);
+                    Bleft.setPower(.5);
+                    sleep(1300);
+                    Fright.setPower(.5);
+                    Fleft.setPower(-.5);
+                    Bright.setPower(.5);
+                    Bleft.setPower(-.5);
+                    sleep(1000);
+                    break;
                 }
-
-            }
-            if(liftTarget >= lift.getCurrentPosition()){liftPower = 1;}//Sets the speed of the lift whether it is going up or down
-            else{liftPower = 0.75;}
-
-            if(lift.getCurrentPosition() != liftTarget && liftTarget < MAX_LIFT_HEIGHT){//Moves the lift up or down by liftTarget
-                lift.setTargetPosition(liftTarget);
-                lift.setPower(liftPower);
-            }
-
-            //This is looking to see if the bolt has been detected and if it has it runs the code inside it
-            if (label == "1 Bolt" && parkYet == true) {
-                Fright.setPower(-.5);
-                Fleft.setPower(.5);
-                Bright.setPower(.5);//Goes it's right "parking position 1"
-                Bleft.setPower(-.5);
-                sleep(400);
-                Fright.setPower(0);
-                Fleft.setPower(0);//Stops the motors
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(999999999);//Breaks the loop and ends the autonomous
-                /*Fright.setPower(-1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(-1);
-                sleep(800);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                break;
-               /* Fright.setPower(.7);
-                Fleft.setPower(.7);
-                Bright.setPower(.7);
-                Bleft.setPower(.7);
-                sleep(1300);
-                Fright.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(100);
-                Fright.setPower(1);
-                Fleft.setPower(-1);
-                Bright.setPower(-1);
-                Bleft.setPower(1);
-                sleep(850);
-                    /*
+                //This is looking to see if the bulb has been detected and if it has it runs the code inside it
+                else if (label == "green2") {
+                    Fright.setPower(.4);
+                    Fleft.setPower(.4);
+                    Bright.setPower(.4);
+                    Bleft.setPower(.4);
+                    sleep(2500);
+                    Fright.setPower(.5);
+                    Fleft.setPower(-.5);
+                    Bright.setPower(.5);
+                    Bleft.setPower(-.5);
+                    sleep(1000);
+                    break;
+                }
+                //This is looking to see if the panel has been detected and if it has it runs the code inside it
+                else if (label == "purple3") {
+                    Fright.setPower(-.5);
+                    Fleft.setPower(.45);
+                    Bright.setPower(.45);
+                    Bleft.setPower(-.5);
+                    sleep(1600);
+                    Fright.setPower(.5);
+                    Fleft.setPower(.5);
+                    Bright.setPower(.5);
+                    Bleft.setPower(.5);
+                    sleep(1300);
+                    Fright.setPower(.5);
+                    Fleft.setPower(-.5);
+                    Bright.setPower(.5);
+                    Bleft.setPower(-.5);
+                    sleep(1000);
+                    break;
+                }
+                else {
                     Fright.setPower(0);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
+                    Fleft.setPower(0);
                     Bleft.setPower(0);
-                    sleep(500);
-                    /*Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(500);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(9999999);*/
+                    Bright.setPower(0);}
+                telemetry.update();
             }
-            //This is looking to see if the bulb has been detected and if it has it runs the code inside it
-            else if (label == "2 Bulb" && parkYet == true) {
-                Fright.setPower(.5);
-                Fleft.setPower(.5);
-                Bright.setPower(.5);//Backs it up just a little bit
-                Bleft.setPower(.5);
-                sleep(100);
-                Fright.setPower(.5);
-                Fleft.setPower(-.5);//turns to face where the scanning cone was
-                Bright.setPower(.5);
-                Bleft.setPower(-.5);
-                sleep(375);
-                Fright.setPower(0);
-                Fleft.setPower(0);//stops the motors since it is already in parking position 2
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(99999999);
-                //break;
-            }
-            //This is looking to see if the panel has been detected and if it has it runs the code inside it
-            else if (label == "3 Panel" && parkYet == true) {
-                Fright.setPower(.5);
-                Fleft.setPower(.5);//Moves it back a little bit
-                Bright.setPower(.5);
-                Bleft.setPower(.5);
-                sleep(100);
-                Fright.setPower(.5);
-                Fleft.setPower(-.5);//Turns it back to where the scanning cone was
-                Bright.setPower(.5);
-                Bleft.setPower(-.5);
-                sleep(375);
-                Fright.setPower(-.5);
-                Fleft.setPower(-.5);
-                Bright.setPower(-.5);//drives forwards to where the cone was
-                Bleft.setPower(-.5);
-                sleep(300);
-                Fright.setPower(.5);
-                Fleft.setPower(-.5);//goes to it's left to park
-                Bright.setPower(-.5);
-                Bleft.setPower(.5);
-                sleep(400);
-                Fright.setPower(0);
-                Fleft.setPower(0);//stops in parking position 3
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(9999999);
-                //break;
-                /*
-                Fright.setPower(-1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(-1);
-                sleep(800);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                break;
-                /*Fright.setPower(.7);
-                Fleft.setPower(.7);
-                Bright.setPower(.7);
-                Bleft.setPower(.7);
-                sleep(900);
-                Fright.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(100);
-                Fright.setPower(-1);
-                Fleft.setPower(1);
-                Bright.setPower(1);
-                Bleft.setPower(-1);
-                sleep(800);
-                    /*
-                    Fright.setPower(0);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(0);
-                    sleep(500);
-                    /*Fright.setPower(1);
-                    Fleft.setPower(1);
-                    Bright.setPower(1);
-                    Bleft.setPower(1);
-                    sleep(500);
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bright.setPower(0);
-                Bleft.setPower(0);
-                sleep(9999999);*/
-            }
-            else {
-                Fright.setPower(0);
-                Fleft.setPower(0);
-                Bleft.setPower(0);
-                Bright.setPower(0);}
-            telemetry.addData("Parking?", parkYet);
-            telemetry.addData("Deliver?", deliverYet);
-            telemetry.addData("Scan?", scanYet);
-            telemetry.addData("Move?", moveYet);
-            telemetry.addData("Lift Position", liftTarget);
-            telemetry.update();
         }
     }
-
-
 
     /**
      * Initialize the Vuforia localization engine.
@@ -476,7 +367,7 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -487,7 +378,7 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
@@ -497,7 +388,6 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
+        //tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }
-
