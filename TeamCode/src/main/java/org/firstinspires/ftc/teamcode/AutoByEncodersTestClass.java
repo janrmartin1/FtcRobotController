@@ -57,37 +57,56 @@ public class AutoByEncodersTestClass extends LinearOpMode {
                     .addData("BL Enc value",Bleft.getCurrentPosition());
             telemetry.update();
 
-            // simply move straight (hopefully) forward to encoder position 1000
-            Bleft.setTargetPosition(1000);              // set back motors and power in RTP mode
-            Bright.setTargetPosition(1000);
-            Bleft.setPower(.5);
-            Bright.setPower(.5);
-            while(Bleft.isBusy()){                       // loop to send rear motor power values to front motors and mimic movement
+            // simply move straight (hopefully) forward to encoder position 2000
+            RTarget = 2000;
+            LTarget = 2000;
+            runPower = .3;  
+            Bleft.setTargetPosition(RTarget);              // set back motors and power in RTP mode
+            Bright.setTargetPosition(LTarget);
+            Bleft.setPower(runPower);
+            Bright.setPower(runPower);
+            while( Bleft.getCurrentPosition() < LTarget ){       // loop to send rear motor power values to front motors and mimic movement
                 Fleft.setPower(Bleft.getPower());
-                if (Bright.isBusy()){
+                if (Bright.getCurrentPOsition() < RTarget ){
                     Fright.setPower(Bright.getPower());
                     telemetry.update();                 // update values on display
                 } else {
-                    break;                              // end loop when movement has stopped
+                    Fleft.setPower(0);
+                    Fright.setPower(0);
+                    Bleft.setPower(0);
+                    Bright.setPower(0);
+                    break;                              // stop motors and end loop when movement has stopped
                 }
             }
             // pause before movement sequence 2
-            sleep(1000);
+            sleep(9000);
 
             // second movement is attempting to spin to the right
-            Bleft.setTargetPosition(1000);              // set new target positions and reduce motor power
-            Bright.setTargetPosition(0);
-            Bleft.setPower(.3);
-            Bright.setPower(.3);
-            while(Bleft.isBusy()){                       // loop to set rear motor power values to front motors and mimic movement
+            RTarget = 4000;
+            LTarget = 0;
+            lift.setTargetPosition(350);
+            left.setPower(.75);
+            Bleft.setTargetPosition(RTarget);              // set new target positions and reduce motor power
+            Bright.setTargetPosition(LTarget);
+            Bleft.setPower(runPower);
+            Bright.setPower(runPower);
+            while( Bleft.getCurrentPosition() < LTarget ){       // loop to send rear motor power values to front motors and mimic movement
                 Fleft.setPower(Bleft.getPower());
-                if (Bright.isBusy()){
+                if (Bright.getCurrentPOsition() < RTarget ){
                     Fright.setPower(Bright.getPower());
                     telemetry.update();                 // update values on display
                 } else {
-                    break;                              // end loop when movement has stopped
+                    Fleft.setPower(0);
+                    Fright.setPower(0);
+                    Bleft.setPower(0);
+                    Bright.setPower(0);
+                    break;                              //  stop motors and end loop when movement has stopped
                 }
             }
+            lift.setPower(.3);                          // lower lift to resting postion
+            lift.setTargetPosition(0);
+            sleep(3000);
+            telemetry.update();
             break;                                       // end opmode when sequence of movements has stopped
         }
     }
