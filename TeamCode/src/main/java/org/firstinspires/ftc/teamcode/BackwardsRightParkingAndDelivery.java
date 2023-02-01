@@ -54,7 +54,7 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Disabled
+
 @Autonomous(name = "Backwards Right Parking And Deliver", group = "Concept")
 public class BackwardsRightParkingAndDelivery extends LinearOpMode {
 
@@ -147,7 +147,7 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        claw.setPosition(1);
+        claw.setPosition(0);
 
 
 
@@ -166,62 +166,59 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 16.0 / 9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
-        //String label = "";
-        //if (opModeIsActive()) {
-        // Fright.setPower(1);
-        //Fleft.setPower(1);
-        //Bright.setPower(1);
-        //Bleft.setPower(1);
 
-        while (opModeIsActive()) {
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+                telemetry.addData("scanYet", scanYet);
+                telemetry.addData("moveYet", moveYet);
+                if (tfod != null) {
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        telemetry.addData("# Objects Detected", updatedRecognitions.size());
 
-            if (tfod != null && scanYet == true) {//Checking if scanYet is true and if it is it will scan the cone
-                // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    telemetry.addData("# Objects Detected", updatedRecognitions.size());
+                        // step through the list of recognitions and display image position/size information for each one
+                        // Note: "Image number" refers to the randomized image orientation/number
+                        for (Recognition recognition : updatedRecognitions) {
+                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
+                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
+                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
-                    // step through the list of recognitions and display image position/size information for each one
-                    // Note: "Image number" refers to the randomized image orientation/number
-                    for (Recognition recognition : updatedRecognitions) {
-                        double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                        double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                        double width = Math.abs(recognition.getRight() - recognition.getLeft());
-                        double height = Math.abs(recognition.getTop() - recognition.getBottom());
+                            telemetry.addData(""," ");
+                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
+                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
+                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
 
-                        telemetry.addData("", " ");
-                        telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                        telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-                        telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+                            moveYet = false;
+                            scanYet = false;
+                            deliverYet = true;
 
-                        moveYet = false;
-                        scanYet = false;
-                        deliverYet = true;
-
-                        if(recognition.getConfidence() >= .7){
-                            label = recognition.getLabel();
-                            Fright.setPower(1);
-                            Fleft.setPower(1);//Moves to the starting position of the loop below
-                            Bright.setPower(1);
-                            Bleft.setPower(1);
-                            sleep(400);
-                            Fright.setPower(-1);
-                            Fleft.setPower(1);//Turns to face the side stack
-                            Bright.setPower(-1);
-                            Bleft.setPower(1);
-                            sleep(250);
-                            Fright.setPower(0);
-                            Fleft.setPower(0);//Stops facing the cones
-                            Bright.setPower(0);
-                            Bleft.setPower(0);
+                            if(recognition.getConfidence() >= .7){
+                                label = recognition.getLabel();
+                                Fright.setPower(.4);
+                                Fleft.setPower(.4);
+                                Bright.setPower(.4);
+                                Bleft.setPower(.4);
+                                sleep(2300);
+                                Fright.setPower(.5);
+                                Fleft.setPower(-.5);
+                                Bright.setPower(.5);
+                                Bleft.setPower(-.5);
+                                sleep(800);
+                                Fright.setPower(0);
+                                Fleft.setPower(0);//Stops facing the cones
+                                Bright.setPower(0);
+                                Bleft.setPower(0);
+                            }
                         }
                         telemetry.update();
                     }
@@ -231,18 +228,16 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
 
             }
             if(label == null && moveYet == true){
-                Fright.setPower(1);
-                Fleft.setPower(1);//moves forward so it can be close enough to scan the cone
-                Bright.setPower(1);
-                Bleft.setPower(1);
-                sleep(200);
+                Fright.setPower(.5);
+                Fleft.setPower(.5);//moves forward so it can be close enough to scan the cone
+                Bright.setPower(.5);
+                Bleft.setPower(.5);
+                sleep(400);
                 Fright.setPower(0);
                 //Fleft.setPower(0);
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                sleep(100);
                 Fleft.setPower(0);
-                sleep(5000);
                 scanYet = true; //sets scanYet to true so it will scan the cone up above
 
             }
@@ -257,7 +252,7 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                     else{liftTarget = previousLiftTarget;}//After delivering the cone it will reset it to the position it picked the last cone up from
                     liftTarget = liftTarget - 25;//This is lowering the lift everytime it goes back for a cone so it will pick up the next cone
                     previousLiftTarget = liftTarget;//previousLiftTarget is saving the position of the cone it just picked up so it will set it back to that and lower it from it to grab the next cone
-                    claw.setPosition(0);//This is opening the claw
+                    claw.setPosition(1);//This is opening the claw
                         sleep(50);
                     Fright.setPower(0);
                     Fleft.setPower(0);
@@ -275,8 +270,8 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                     Bright.setPower(.5);
                     Bleft.setPower(-.5);
                         sleep(150);
-                    claw.setPosition(1);//Opens the claw to drop the cone
-                        sleep(250);
+                    claw.setPosition(0);//Opens the claw to drop the cone
+                        sleep(150);
                     Fright.setPower(-.5);
                     Fleft.setPower(.5);//Turns back to face the stacks
                     Bright.setPower(-.5);
@@ -284,6 +279,21 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                         sleep(150);
                     i++;//Adds 1 to i so it will add up and when it = 5 it will stop the loop
                     if(i >= 5){
+                        Fright.setPower(.5);
+                        Fleft.setPower(.5);
+                        Bright.setPower(.5);//This will move it backwards
+                        Bleft.setPower(.5);
+                        sleep(100);
+                        Fright.setPower(-.5);
+                        Fleft.setPower(.5);//This will turn it back to it's original spot
+                        Bright.setPower(-.5);
+                        Bleft.setPower(.5);
+                        sleep(800);
+                        Fright.setPower(.4);
+                        Fleft.setPower(.4);
+                        Bright.setPower(.4);
+                        Bleft.setPower(.4);
+                        sleep(2300);
                         parkYet = true;//Will let it park from where it is at
                         deliverYet = false;//Stops the loop so it can't deliver anymore cones
                     }
@@ -300,21 +310,6 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
 
             //This is looking to see if the bolt has been detected and if it has it runs the code inside it
             if (label == "1 Bolt" && parkYet == true) {
-                Fright.setPower(.5);
-                Fleft.setPower(.5);
-                Bright.setPower(.5);//This will move it backwards
-                Bleft.setPower(.5);
-                sleep(100);
-                Fright.setPower(.5);
-                Fleft.setPower(-.5);//This will turn it back to it's original spot
-                Bright.setPower(.5);
-                Bleft.setPower(-.5);
-                sleep(375);
-                Fright.setPower(-.5);
-                Fleft.setPower(-.5);//Drives towards where the scanning cone "was"
-                Bright.setPower(-.5);
-                Bleft.setPower(-.5);
-                sleep(300);
                 Fright.setPower(-.5);
                 Fleft.setPower(.5);
                 Bright.setPower(.5);//Goes it's right "parking position 1"
@@ -324,7 +319,7 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                 Fleft.setPower(0);//Stops the motors
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                break;//Breaks the loop and ends the autonomous
+                sleep(999999999);//Breaks the loop and ends the autonomous
                 /*Fright.setPower(-1);
                 Fleft.setPower(1);
                 Bright.setPower(1);
@@ -382,7 +377,8 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                 Fleft.setPower(0);//stops the motors since it is already in parking position 2
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                break;
+                sleep(99999999);
+                //break;
             }
             //This is looking to see if the panel has been detected and if it has it runs the code inside it
             else if (label == "3 Panel" && parkYet == true) {
@@ -410,7 +406,8 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
                 Fleft.setPower(0);//stops in parking position 3
                 Bright.setPower(0);
                 Bleft.setPower(0);
-                break;
+                sleep(9999999);
+                //break;
                 /*
                 Fright.setPower(-1);
                 Fleft.setPower(1);
@@ -503,3 +500,4 @@ public class BackwardsRightParkingAndDelivery extends LinearOpMode {
         // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }
+

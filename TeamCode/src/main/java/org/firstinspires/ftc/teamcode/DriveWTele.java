@@ -50,10 +50,12 @@
             Fright.setDirection(DcMotorSimple.Direction.REVERSE);
             Bright.setDirection(DcMotorSimple.Direction.REVERSE);
             lift.setDirection(DcMotorSimple.Direction.REVERSE);
+            Bright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            Bleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             
             //Fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);  // motor controller has a physical switch
-            Fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //Fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             Bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -136,9 +138,9 @@
                 // telemetry.addData("Position", closed);
                 telemetry.addData("Lift Power", liftPower);
                 telemetry.addData("Servo Position", Claw.getPosition());
-                telemetry.addline()
-                    addData("BR Enc value",Bright.getPosition())
-                    addData("BL Enc value",Bleft.getPosition());
+                //telemetry.addline()
+                telemetry.addData("BR Enc value",Bright.getCurrentPosition()) ;
+                telemetry.addData("BL Enc value",Bleft.getCurrentPosition());
  
                 telemetry.update();
 

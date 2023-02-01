@@ -131,7 +131,7 @@ public class RightBackwardsParkingCONTROLsCAN extends LinearOpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        claw.setPosition(1);
+        claw.setPosition(0);
 
 
 
