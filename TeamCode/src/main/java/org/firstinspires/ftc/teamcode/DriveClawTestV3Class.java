@@ -99,10 +99,10 @@
                 if( (gamepad2.right_bumper) && (liftTarget + 10) < MAX_LIFT_HEIGHT){     // 230118 set increment to a lower value to test
                     liftTarget = liftTarget + 1;    // push to raise the lift by small increments above preset positions
                 }
-                if(gamepad2.x && !gamepad2.b && lift.getCurrentPosition() < 600){
+                if(gamepad2.x && !gamepad2.b && lift.getCurrentPosition() < 830){
                     liftTarget = liftTarget + 1;    // constant increment of liftTarget while holding x
                 }
-                if(gamepad2.b && !gamepad2.x && lift.getCurrentPosition() < 620 && liftTarget >= 1){
+                if(gamepad2.b && !gamepad2.x && lift.getCurrentPosition() < 850 && liftTarget >= 1){
                     liftTarget = liftTarget - 1;    // constant increment of liftTarget while holding x
                 }
                 // adjust lift height if within safe operating range
