@@ -9,8 +9,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous
 public class AutoByEncodersTestClass extends LinearOpMode {
 
+    int RTarget = 0;
+    int LTarget = 0;
+    double runPower = 0;
     @Override
     public void runOpMode(){
+
         // Declare the motors
         DcMotorSimple Fleft =  hardwareMap.get(DcMotorSimple.class,"Fleft");
         DcMotor Bleft = hardwareMap.dcMotor.get("Bleft");
@@ -67,7 +71,8 @@ public class AutoByEncodersTestClass extends LinearOpMode {
             Bright.setPower(runPower);
             while( Bleft.getCurrentPosition() < LTarget ){       // loop to send rear motor power values to front motors and mimic movement
                 Fleft.setPower(Bleft.getPower());
-                if (Bright.getCurrentPOsition() < RTarget ){
+                telemetry.update();
+                if (Bright.getCurrentPosition() < RTarget ){
                     Fright.setPower(Bright.getPower());
                     telemetry.update();                 // update values on display
                 } else {
@@ -85,14 +90,14 @@ public class AutoByEncodersTestClass extends LinearOpMode {
             RTarget = 4000;
             LTarget = 0;
             lift.setTargetPosition(350);
-            left.setPower(.75);
+            lift.setPower(.75);
             Bleft.setTargetPosition(RTarget);              // set new target positions and reduce motor power
             Bright.setTargetPosition(LTarget);
             Bleft.setPower(runPower);
             Bright.setPower(runPower);
             while( Bleft.getCurrentPosition() < LTarget ){       // loop to send rear motor power values to front motors and mimic movement
                 Fleft.setPower(Bleft.getPower());
-                if (Bright.getCurrentPOsition() < RTarget ){
+                if (Bright.getCurrentPosition() < RTarget ){
                     Fright.setPower(Bright.getPower());
                     telemetry.update();                 // update values on display
                 } else {

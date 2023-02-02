@@ -53,8 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Auton with Delivery", group = "Concept")
-public class BackRparkDeliver extends LinearOpMode {
+@Autonomous(name = "Forward Auton with Delivery", group = "Concept")
+public class ForwardRparkDeliver extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -204,15 +204,15 @@ public class BackRparkDeliver extends LinearOpMode {
 
                             if (recognition.getConfidence() >= .7) {
                                 label = recognition.getLabel();
-                                Fright.setPower(.4);
-                                Fleft.setPower(.4);
-                                Bright.setPower(.4);
-                                Bleft.setPower(.4);
+                                Fright.setPower(-.4);
+                                Fleft.setPower(-.4);
+                                Bright.setPower(-.4);
+                                Bleft.setPower(-.4);
                                 sleep(3000);
-                                Fright.setPower(-.5);
-                                Fleft.setPower(.5);
-                                Bright.setPower(-.5);
-                                Bleft.setPower(.5);
+                                Fright.setPower(.5);
+                                Fleft.setPower(-.5);
+                                Bright.setPower(.5);
+                                Bleft.setPower(-.5);
                                 sleep(800);
                                 Fright.setPower(0);
                                 Fleft.setPower(0);//Stops facing the cones
@@ -226,11 +226,14 @@ public class BackRparkDeliver extends LinearOpMode {
                     }
                 }
                 if (label == null && moveYet == true) {
-                    Fright.setPower(.5);
-                    Fleft.setPower(.5);//moves forward so it can be close enough to scan the cone
-                    Bright.setPower(.5);
-                    Bleft.setPower(.5);
+                    claw.setPosition(1);
+                    Fright.setPower(-.5);
+                    Fleft.setPower(-.5);//moves forward so it can be close enough to scan the cone
+                    Bright.setPower(-.5);
+                    Bleft.setPower(-.5);
                     sleep(400);
+                    lift.setTargetPosition(200);
+                    lift.setPower(1);
                     Fright.setPower(0);
                     //Fleft.setPower(0);
                     Bright.setPower(0);
@@ -292,21 +295,26 @@ public class BackRparkDeliver extends LinearOpMode {
                         backDifference += 100;
                         i++;//Adds 1 to i so it will add up and when it = 5 it will stop the loop
                         if (i >= 5) {
-                            Fright.setPower(.5);
-                            Fleft.setPower(.5);
-                            Bright.setPower(.5);//This will move it backwards
-                            Bleft.setPower(.5);
-                            sleep(100);
                             Fright.setPower(-.5);
-                            Fleft.setPower(.5);//This will turn it back to it's original spot
-                            Bright.setPower(-.5);
-                            Bleft.setPower(.5);
+                            Fleft.setPower(-.5);
+                            Bright.setPower(-.5);//This will move it backwards
+                            Bleft.setPower(-.5);
+                            sleep(100);
+                            Fright.setPower(.5);
+                            Fleft.setPower(-.5);//This will turn it back to it's original spot
+                            Bright.setPower(.5);
+                            Bleft.setPower(-.5);
                             sleep(800);
-                            Fright.setPower(.4);
-                            Fleft.setPower(.4);
-                            Bright.setPower(.4);
-                            Bleft.setPower(.4);
+                            Fright.setPower(-.4);
+                            Fleft.setPower(-.4);
+                            Bright.setPower(-.4);
+                            Bleft.setPower(-.4);
                             sleep(2300);
+                            Fright.setPower(.5);
+                            Fleft.setPower(-.5);//This will turn it back to it's original spot
+                            Bright.setPower(.5);
+                            Bleft.setPower(-.5);
+                            sleep(1600);
                             parkYet = true;//Will let it park from where it is at
                             deliverYet = false;//Stops the loop so it can't deliver anymore cones
                         }
