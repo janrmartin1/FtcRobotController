@@ -204,11 +204,22 @@ public class ForwardRparkDeliver extends LinearOpMode {
 
                             if (recognition.getConfidence() >= .7) {
                                 label = recognition.getLabel();
-                                Fright.setPower(-.4);
+                                Fleft.setPower(-.5);
+                                Fright.setPower(-.5);
+                                Bright.setPower(-.5);
+                                Bleft.setPower(-.5);
+                                sleep(100);
+                                parkYet = true;
+                               /* Fright.setPower(-.4);
                                 Fleft.setPower(-.4);
                                 Bright.setPower(-.4);
                                 Bleft.setPower(-.4);
-                                sleep(3000);
+                                sleep(3200);
+                                Fright.setPower(.4);
+                                Fleft.setPower(.4);
+                                Bright.setPower(.4);
+                                Bleft.setPower(.4);
+                                sleep(200);
                                 Fright.setPower(.5);
                                 Fleft.setPower(-.5);
                                 Bright.setPower(.5);
@@ -218,7 +229,7 @@ public class ForwardRparkDeliver extends LinearOpMode {
                                 Fleft.setPower(0);//Stops facing the cones
                                 Bright.setPower(0);
                                 Bleft.setPower(0);
-                                deliverYet = true;
+                                deliverYet = true;*/
                             }
                         }
 
@@ -242,15 +253,15 @@ public class ForwardRparkDeliver extends LinearOpMode {
                     scanYet = true; //sets s
                     moveYet = false;
                 } else if (label != null && deliverYet == true) {
-                    while (i <= 5) {//Anything in this loop will only loop 5 times
+                    for (i = 1; i <=5; i++) {//Anything in this loop will only loop 5 times
                         Fright.setPower(-.5);
                         Fleft.setPower(-.5);
                         Bright.setPower(-.5);//This starts facing the side stack and will move forwards towards the side stacks
                         Bleft.setPower(-.5);
-                        sleepAmount = 1000 + backDifference;
+                        sleepAmount = 900;
                         sleep(sleepAmount);
                         claw.setPosition(1);
-                        if (liftTarget == 0) {
+                        if (lift.getTargetPosition() == 200) {
                             liftTarget = 375;
                         }//This is setting the lift target to the low junction
                         else {
@@ -293,32 +304,33 @@ public class ForwardRparkDeliver extends LinearOpMode {
                         sleepAmount = 150 + backDifference;
                         sleep(150);
                         backDifference += 100;
-                        i++;//Adds 1 to i so it will add up and when it = 5 it will stop the loop
-                        if (i >= 5) {
-                            Fright.setPower(-.5);
-                            Fleft.setPower(-.5);
-                            Bright.setPower(-.5);//This will move it backwards
-                            Bleft.setPower(-.5);
-                            sleep(100);
-                            Fright.setPower(.5);
-                            Fleft.setPower(-.5);//This will turn it back to it's original spot
-                            Bright.setPower(.5);
-                            Bleft.setPower(-.5);
-                            sleep(800);
-                            Fright.setPower(-.4);
-                            Fleft.setPower(-.4);
-                            Bright.setPower(-.4);
-                            Bleft.setPower(-.4);
-                            sleep(2300);
-                            Fright.setPower(.5);
-                            Fleft.setPower(-.5);//This will turn it back to it's original spot
-                            Bright.setPower(.5);
-                            Bleft.setPower(-.5);
-                            sleep(1600);
-                            parkYet = true;//Will let it park from where it is at
-                            deliverYet = false;//Stops the loop so it can't deliver anymore cones
-                        }
+                        //Adds 1 to i so it will add up and when it = 5 it will stop the loop
                     }
+                    if (i >= 6) {
+                        Fright.setPower(-.5);
+                        Fleft.setPower(-.5);
+                        Bright.setPower(-.5);//This will move it backwards
+                        Bleft.setPower(-.5);
+                        sleep(100);
+                        Fright.setPower(.5);
+                        Fleft.setPower(-.5);//This will turn it back to it's original spot
+                        Bright.setPower(.5);
+                        Bleft.setPower(-.5);
+                        sleep(800);
+                        Fright.setPower(-.4);
+                        Fleft.setPower(-.4);
+                        Bright.setPower(-.4);
+                        Bleft.setPower(-.4);
+                        sleep(2300);
+                        Fright.setPower(.5);
+                        Fleft.setPower(-.5);//This will turn it back to it's original spot
+                        Bright.setPower(.5);
+                        Bleft.setPower(-.5);
+                        sleep(1600);
+                        parkYet = true;//Will let it park from where it is at
+                        deliverYet = false;//Stops the loop so it can't deliver anymore cones
+                        }
+
 
                     //This is looking to see if the bolt has been detected and if it has it runs the code inside it
                     if (label == "black1") {

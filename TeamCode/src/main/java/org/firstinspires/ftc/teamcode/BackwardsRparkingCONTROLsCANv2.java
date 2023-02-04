@@ -65,7 +65,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
      * has been downloaded to the Robot Controller's SD FLASH memory, it must to be loaded using loadModelFromFile()
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
-    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    private static final String TFOD_MODEL_ASSET = "CustomSleeveV2.tflite";
     //private static final String TFOD_MODEL_FILE  = "C:\\Users\\FTC A\\Desktop\\FtcRobotController\\FtcRobotController\\src\\main\\assets\\CustomSleeveV1.tflite";
 
     String label = null;
@@ -73,9 +73,9 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
     boolean moveYet = true;
 
     private static final String[] LABELS = {
-            "1 Bolt",
-            "2 Bulb",
-            "3 Panel"
+            "black1",
+            "green2",
+            "purple3"
     };
 
     /*
@@ -125,9 +125,10 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
         //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        Bright.setDirection(DcMotorSimple.Direction.REVERSE);
-        Fright.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Fleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Bright.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Fright.setDirection(DcMotorSimple.Direction.REVERSE);
+        Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -136,7 +137,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        claw.setPosition(1);
+        claw.setPosition(0);
 
 
         /**
@@ -164,6 +165,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
             while (opModeIsActive()) {
                 telemetry.addData("scanYet", scanYet);
                 telemetry.addData("moveYet", moveYet);
+                telemetry.addData("Label", label);
                 if (tfod != null && scanYet == true) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -194,37 +196,43 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
                     }
                 }
                 if(label == null && moveYet == true){
+                    claw.setPosition(1);
+                    sleep(200);
+                    lift.setTargetPosition(300);
+                    lift.setPower(1);
+                    sleep(1000);
                     Fright.setPower(.5);
                     Fleft.setPower(.5);
                     Bright.setPower(.5);
                     Bleft.setPower(.5);
-                    sleep(350);
+                    sleep(400);
                     Fright.setPower(0);
                     //Fleft.setPower(0);
                     Bright.setPower(0);
                     Bleft.setPower(0);
                     Fleft.setPower(0);
                     sleep(5000);
+                    lift.setTargetPosition(200);
+                    lift.setPower(1);
                     scanYet = true;
+                    moveYet = false;
                 }
 
                 //This is looking to see if the bolt has been detected and if it has it runs the code inside it
-                if (label == "1 Bolt") {
+                if (label == "black1") {
+                    lift.setTargetPosition(450);
                     Fright.setPower(.45);
                     Fleft.setPower(-.5);
                     Bright.setPower(-.5);
                     Bleft.setPower(.45);
-                    sleep(1600);
+                    sleep(1435);
                     Fright.setPower(.5);
                     Fleft.setPower(.5);
                     Bright.setPower(.5);
                     Bleft.setPower(.5);
-                    sleep(1300);
-                    Fright.setPower(.5);
-                    Fleft.setPower(-.5);
-                    Bright.setPower(.5);
-                    Bleft.setPower(-.5);
-                    sleep(1000);
+                    lift.setTargetPosition(0);
+                    lift.setPower(1);
+                    sleep(600);
                     break;
                /* Fright.setPower(.7);
                 Fleft.setPower(.7);
@@ -258,21 +266,24 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
                 sleep(9999999);*/
                 }
                 //This is looking to see if the bulb has been detected and if it has it runs the code inside it
-                else if (label == "2 Bulb") {
+                else if (label == "green2") {
                     Fright.setPower(.4);
                     Fleft.setPower(.4);
                     Bright.setPower(.4);
                     Bleft.setPower(.4);
                     sleep(2500);
-                    Fright.setPower(.5);
-                    Fleft.setPower(-.5);
-                    Bright.setPower(.5);
-                    Bleft.setPower(-.5);
-                    sleep(1000);
+                    Fright.setPower(-.4);
+                    Fleft.setPower(-.4);
+                    Bright.setPower(-.4);
+                    Bleft.setPower(-.4);
+                    lift.setTargetPosition(0);
+                    lift.setPower(1);
+                    sleep(300);
                     break;
                 }
                 //This is looking to see if the panel has been detected and if it has it runs the code inside it
-                else if (label == "3 Panel") {
+                else if (label == "purple3") {
+                    lift.setTargetPosition(450);
                     Fright.setPower(-.5);
                     Fleft.setPower(.45);
                     Bright.setPower(.45);
@@ -282,12 +293,9 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
                     Fleft.setPower(.5);
                     Bright.setPower(.5);
                     Bleft.setPower(.5);
-                    sleep(1300);
-                    Fright.setPower(.5);
-                    Fleft.setPower(-.5);
-                    Bright.setPower(.5);
-                    Bleft.setPower(-.5);
-                    sleep(1000);
+                    lift.setTargetPosition(0);
+                    lift.setPower(1);
+                    sleep(500);
                     break;
                 /*Fright.setPower(.7);
                 Fleft.setPower(.7);
