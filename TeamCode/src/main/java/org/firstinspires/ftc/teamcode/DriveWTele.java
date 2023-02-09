@@ -1,5 +1,6 @@
  package org.firstinspires.ftc.teamcode;
 
+    import com.qualcomm.robotcore.eventloop.opmode.Disabled;
     import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
     import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
     import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,7 +9,7 @@
     import com.qualcomm.robotcore.util.ElapsedTime;
 
     import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+    @Disabled
     @TeleOp(name = "TEST DRIVE W/tele")
     public class DriveWTele extends LinearOpMode {
         // variables
@@ -93,7 +94,7 @@
                     //Set the lift to ground position
                     liftTarget = 0;
                     runtime.reset();  //resets runtime delay timer
-                }
+                } //lse if
 
                 // check for lift height fine tuning and manual up or down 
 

@@ -29,7 +29,7 @@
                                                         // ** 230118 set default speed to half power
         private double          liftPower = 0.75;        // declare lift power variable ** 230118 increased from 0.50 for testing **
         private int             liftTarget = 0;         // declare lift target position variable
-        private boolean         closed = false;          // declare claw status variable
+        private boolean         closed = true;          // declare claw status variable
         private boolean         liftTurbo = false;
 
         @Override
@@ -92,18 +92,22 @@
                     //Set the lift to ground position
                     liftTarget = 0;
                     runtime.reset();  //resets runtime delay timer
+                }  else if (gamepad2.left_bumper && runtime.seconds() > 1.0) {
+                    liftTarget = 100;
+                    runtime.reset();
                 }
+
 
                 // check for lift height fine tuning and manual up or down 
 
                 if( (gamepad2.right_bumper) && (liftTarget + 10) < MAX_LIFT_HEIGHT){     // 230118 set increment to a lower value to test
                     liftTarget = liftTarget + 1;    // push to raise the lift by small increments above preset positions
                 }
-                if(gamepad2.x && !gamepad2.b && lift.getCurrentPosition() < 830){
-                    liftTarget = liftTarget + 1;    // constant increment of liftTarget while holding x
+                if(gamepad2.x && lift.getCurrentPosition() < 900){
+                    liftTarget = liftTarget + 3;    // constant increment of liftTarget while holding x
                 }
-                if(gamepad2.b && !gamepad2.x && lift.getCurrentPosition() < 850 && liftTarget >= 1){
-                    liftTarget = liftTarget - 1;    // constant increment of liftTarget while holding x
+                if(gamepad2.b && lift.getCurrentPosition() > 3){
+                    liftTarget = liftTarget - 3;    // constant increment of liftTarget while holding x
                 }
                 // adjust lift height if within safe operating range
 

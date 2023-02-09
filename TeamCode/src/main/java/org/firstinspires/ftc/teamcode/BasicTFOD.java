@@ -49,6 +49,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
+
+@Disabled
 @TeleOp(name = "BasicTFOD", group = "Concept")
 public class BasicTFOD extends LinearOpMode {
 

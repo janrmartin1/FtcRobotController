@@ -131,6 +131,8 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
         Bleft.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         Fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -188,7 +190,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
 
                             moveYet = false;
 
-                            if(recognition.getConfidence() >= .8){
+                            if(recognition.getConfidence() >= .7){
                                 label = recognition.getLabel();
                             }
                         }
