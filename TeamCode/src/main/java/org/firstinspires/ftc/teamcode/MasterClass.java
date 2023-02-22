@@ -29,12 +29,14 @@ public class MasterClass {
 
 
    public void Init(HardwareMap map){
-      FrontLeft = map.get("Fleft");
-      FrontRight = map.get("Fright");
-      BackLeft = map.get("Bleft");
-      BackRight = map.get("Bright");
+      FrontLeft = map.get(DcMotorSimple.class, "Fleft");
+      FrontRight = map.get(DcMotor.class,"Fright");
+      BackLeft = map.get(DcMotor.class,"Bleft");
+      BackRight = map.get(DcMotor.class,"Bright");
+      Lift = map.get(DcMotor.class, "lift");
+      Claw = map.get(Servo.class,"Claw");
 
-      BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+      BackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
       Lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
       Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
