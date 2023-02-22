@@ -1,23 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
-import java.util.List;
 
 public class MasterClass {
    public DcMotorSimple FrontLeft;
@@ -50,13 +38,13 @@ public class MasterClass {
       Claw.setPosition(0);
    }
 
-   public void Drive(String direction){
-      if(direction == "Forward"){
+   public void Drive(String dir){
+      if(dir == "Forward"){
          FrontLeft.setPower(.5);
          FrontRight.setPower(.5);
          BackLeft.setPower(.5);
          BackRight.setPower(.5);}
-      else if(direction == "Backwards"){
+      else if(dir == "Backwards"){
          FrontLeft.setPower(-.5);
          FrontRight.setPower(-.5);
          BackLeft.setPower(-.5);
@@ -92,5 +80,40 @@ public class MasterClass {
       else {
          Lift.setPower(1);
       }
+   }
+
+   public void Strafe(String dir){
+      double POWER = 0;
+      switch(dir){
+         case "Left": POWER = .5; break;
+         case "Right": POWER = -.5; break;
+         default: telemetry.addData(".", "You entered a wrong direction into the Strafe method");
+         POWER = 0;
+      }
+      telemetry.addData("Fleft Power", FrontLeft.getPower());
+
+      FrontLeft.setPower(POWER);
+      FrontRight.setPower(-POWER);
+      BackLeft.setPower(-POWER);
+      BackRight.setPower(POWER);
+
+      telemetry.update();
+   }
+
+   public void Turn(String dir){
+      double POWER = 0;
+      switch (dir){
+         case "CW": POWER = .5; break;
+         case "CCW": POWER = -.5; break;
+         default: POWER = 0; telemetry.addData(".", "Youd entered a wrong direction into the Turn method");
+      }
+      telemetry.addData("Fleft Power", FrontLeft.getPower());
+
+      FrontLeft.setPower(POWER);
+      FrontRight.setPower(-POWER);
+      BackLeft.setPower(POWER);
+      BackRight.setPower(-POWER);
+
+      telemetry.update();
    }
 }
