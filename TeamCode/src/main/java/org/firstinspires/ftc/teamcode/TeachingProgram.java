@@ -12,15 +12,27 @@ public class TeachingProgram extends LinearOpMode {
         Robot.Init(hardwareMap);//This initializes all of the motors/servos and sets the modes
         waitForStart();
         while(opModeIsActive()){
-            Robot.MoveLift("High"); //Enter in what junction you want the lift to go to and enter reset to go back to the ground
+            //Robot.MoveLift("High"); //Enter in what junction you want the lift to go to and enter reset to go back to the ground
 
-            Robot.Drive("Forwards"); // Enter the direction you want to drive. You do have to put a sleep after for how long you want to drive
+           // Robot.Drive("Forwards"); // Enter the direction you want to drive. You do have to put a sleep after for how long you want to drive
 
-            sleep(999); //This will run the stuff above it for however long you put in it REMINDER it reads the numbers as milliseconds not seconds
+           // sleep(999); //This will run the stuff above it for however long you put in it REMINDER it reads the numbers as milliseconds not seconds
 
-            Robot.StopDrive(); // This is self explanitory it stops the drive function above
+            //Robot.StopDrive(); // This is self explanitory it stops the drive function above
 
-            Robot.Turn("CCW"); //Enter in which way you want it to turn
+            //Robot.Turn("CCW"); //Enter in which way you want it to turn Example: CCW = Clockwise and CC = Clockwise
+
+            //Robot.Strafe("Left"); //Enter in what direction you want it to strafe in
+
+            Robot.Scan();
+
+            switch(Robot.label){
+                case"black1":telemetry.addData("Black", "I see the color black");
+                case"green2":telemetry.addData("Green", "I see the color green");
+                case"purple3":telemetry.addData("Purple", "I see the color purple");
+            }
+
+            telemetry.update();
         }
     }
 

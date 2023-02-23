@@ -30,9 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,8 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Main Parking v2", group = "Concept")
-public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
+@Autonomous(name = "Main Parking v3", group = "Concept")
+public class MainParkingV3 extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -200,7 +198,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
                 if(label == null && moveYet == true){
                     claw.setPosition(1);
                     sleep(200);
-                    lift.setTargetPosition(200);
+                    lift.setTargetPosition(600);
                     lift.setPower(1);
                     sleep(1000);
                     Fright.setPower(.5);
@@ -214,7 +212,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
                     Bleft.setPower(0);
                     Fleft.setPower(0);
                     sleep(5000);
-                    lift.setTargetPosition(133);
+                    lift.setTargetPosition(400);
                     lift.setPower(1);
                     scanYet = true;
                     moveYet = false;
@@ -222,7 +220,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
 
                 //This is looking to see if the bolt has been detected and if it has it runs the code inside it
                 if (label == "black1") {
-                    lift.setTargetPosition(300);
+                    lift.setTargetPosition(900);
                     Fright.setPower(.45);
                     Fleft.setPower(-.5);
                     Bright.setPower(-.5);
@@ -285,7 +283,7 @@ public class BackwardsRparkingCONTROLsCANv2 extends LinearOpMode {
                 }
                 //This is looking to see if the panel has been detected and if it has it runs the code inside it
                 else if (label == "purple3") {
-                    lift.setTargetPosition(300);
+                    lift.setTargetPosition(900);
                     Fright.setPower(-.5);
                     Fleft.setPower(.45);
                     Bright.setPower(.45);
