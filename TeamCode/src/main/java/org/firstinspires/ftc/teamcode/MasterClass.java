@@ -35,6 +35,8 @@ public class MasterClass {
 
    public String label = null;
 
+   public boolean scanned = false;
+
    final String[] LABELS = {
            "black1",
            "green2",
@@ -82,6 +84,7 @@ public class MasterClass {
 
       initVuforia(map);
       initTfod(map);
+
 
 
       BackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -168,14 +171,14 @@ public class MasterClass {
          case "CCW": POWER = -.5; break;
          default: POWER = 0; telemetry.addData(".", "You entered a wrong direction into the Turn method");
       }
-      telemetry.addData("Fleft Power", FrontLeft.getPower());
+
 
       FrontLeft.setPower(POWER);
       FrontRight.setPower(-POWER);
       BackLeft.setPower(POWER);
       BackRight.setPower(-POWER);
 
-      telemetry.update();
+
    }
 
    public void Scan() {
@@ -196,13 +199,11 @@ public class MasterClass {
          tfod.setZoom(1.0, 16.0 / 9.0);
       }
 
-      telemetry.addData("Label", label);
       if (tfod != null) {
          // getUpdatedRecognitions() will return null if no new information is available since
          // the last time that call was made.
          List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
          if (updatedRecognitions != null) {
-            telemetry.addData("# Objects Detected", updatedRecognitions.size());
 
             // step through the list of recognitions and display image position/size information for each one
             // Note: "Image number" refers to the randomized image orientation/number
@@ -212,16 +213,13 @@ public class MasterClass {
                double width = Math.abs(recognition.getRight() - recognition.getLeft());
                double height = Math.abs(recognition.getTop() - recognition.getBottom());
 
-               telemetry.addData("", " ");
-               telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-               telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-               telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
 
                if (recognition.getConfidence() >= .7) {
                   label = recognition.getLabel();
+                  scanned = true;
                }
             }
-            telemetry.update();
+
          }
       }
    }

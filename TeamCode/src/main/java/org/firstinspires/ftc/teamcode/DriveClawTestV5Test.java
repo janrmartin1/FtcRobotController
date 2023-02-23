@@ -1,5 +1,5 @@
-    package org.firstinspires.ftc.teamcode;
-
+   package org.firstinspires.ftc.teamcode;
+/*
     import com.qualcomm.robotcore.eventloop.opmode.Disabled;
     import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
     import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -119,7 +119,7 @@
                         lift.setPower(.2);
                         lift.setTargetPosition(liftTarget);
                     }
-                    else if(lift.setPower(1);
+                    //else if(lift.setPower(1);
                         lift.setTargetPosition(liftTarget);}
 
 
@@ -175,7 +175,7 @@
             }
 
         }
-    }
 
 
+*/
 
