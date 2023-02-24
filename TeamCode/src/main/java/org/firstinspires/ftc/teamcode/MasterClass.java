@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.hardware.bosch.BNO055IMU.SensorMode.IMU;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -23,6 +26,7 @@ public class MasterClass {
    public DcMotor BackRight;
    public DcMotor Lift;
    public Servo Claw;
+   public BNO055IMU imu;
    public enum DriveDirection{
       LEFT,
       RIGHT,
@@ -34,6 +38,8 @@ public class MasterClass {
    //private static final String TFOD_MODEL_FILE  = "C:\\Users\\FTC A\\Desktop\\FtcRobotController\\FtcRobotController\\src\\main\\assets\\CustomSleeveV1.tflite";
 
    public String label = null;
+
+
 
    public boolean scanned = false;
 
@@ -81,11 +87,21 @@ public class MasterClass {
       BackRight = map.get(DcMotor.class,"Bright");
       Lift = map.get(DcMotor.class, "lift");
       Claw = map.get(Servo.class,"Claw");
+      imu = map.get(BNO055IMU.class,"imu");
 
       initVuforia(map);
       initTfod(map);
 
+      BNO055IMU.Parameters newImuParameters;
 
+      newImuParameters = new BNO055IMU.Parameters(
+              new RevHubOrientationOnRobot(
+                      RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                      RevHubOrientationOnRobot.UsbFacingDirection.UP
+              )
+      );
+
+      imu.initialize(newImuParameters);
 
       BackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
       Lift.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -114,7 +130,7 @@ public class MasterClass {
          BackRight.setPower(-.5);
       }
    }
-   public void StopDrive(){
+   public void Stop(){
       FrontLeft.setPower(0);
       FrontRight.setPower(0);
       BackLeft.setPower(0);
@@ -164,13 +180,39 @@ public class MasterClass {
       telemetry.update();
    }
 
-   public void Turn(String dir){
+   public void Turn(int num){
       double POWER = 0;
-      switch (dir){
-         case "CW": POWER = .5; break;
-         case "CCW": POWER = -.5; break;
-         default: POWER = 0; telemetry.addData(".", "You entered a wrong direction into the Turn method");
-      }
+
+      YawPitchRollAngles robotOrientation;
+      robotOrientation = BNO055IMU.getRobotYawPitchRollAngles();
+
+      double Yaw   = robotOrientation.getYaw(AngleUnit.DEGREES);
+      double Pitch = robotOrientation.getPitch(AngleUnit.DEGREES);
+      double Roll  = robotOrientation.getRoll(AngleUnit.DEGREES);
+
+      //switch (dir){
+        // case "CW":
+            switch(num){
+               case 1:
+                  if(Yaw < -90){
+                     POWER = .5;
+                  }break;
+               case 2:
+                  if(Yaw < -180){
+                     POWER = .5;
+                  }
+                  break;
+               case 3:
+                  if(Yaw < 90){
+                     POWER = -.5;
+                  }
+                  break;
+               default: POWER = 0;
+            }
+            //break;
+        // case "CCW": POWER = -.5; break;
+        // default: POWER = 0; telemetry.addData(".", "You entered a wrong direction into the Turn method");
+    //  }
 
 
       FrontLeft.setPower(POWER);

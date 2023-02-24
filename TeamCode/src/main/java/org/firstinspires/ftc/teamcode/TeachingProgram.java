@@ -19,19 +19,19 @@ public class TeachingProgram extends LinearOpMode {
 
             sleep(999); //This will run the stuff above it for however long you put in it REMINDER it reads the numbers as milliseconds not seconds
 
-            Robot.StopDrive(); // This is self explanatory it stops the drive function above
+            Robot.Stop(); // This is self explanatory it stops the robot
 
-            Robot.Turn("CCW"); //Enter in which way you want it to turn Example: CCW = Clockwise and CC = Clockwise
+            Robot.Turn(2); //Enter in which way you want it to turn Example: CCW = Clockwise and CC = Clockwise
 
             Robot.Strafe("Left"); //Enter in what direction you want it to strafe in. To strafe 1 block it takes 1680 milliseconds for right and left movement
 
             Robot.Scan(); //You run this when you want to scan the signal cone
             if(Robot.scanned){//This is checking if the robot has scanned yet
                 switch(Robot.label){//This is checking the label variable which contains our variable
-                    case"black1":telemetry.addData("Marty", "I spy with my little eye the color black"); break;//This checks to see if it is black1
-                    case"green2":telemetry.addData("Marty", "I spy with my little eye the color green"); break;//This checks to see if it is green2
-                    case"purple3":telemetry.addData("Marty", "I spy with my little eye the color purple"); break;//This checks to see if it is purple3
-                    default: telemetry.addData("Marty", "I spy nothing");//This is the default if it sees none of the above
+                    case"black1":telemetry.addData("Marty", "I spy with my little eye something black"); break;//This checks to see if it is black1
+                    case"green2":telemetry.addData("Marty", "I spy with my little eye something green"); break;//This checks to see if it is green2
+                    case"purple3":telemetry.addData("Marty", "I spy with my little eye something purple"); break;//This checks to see if it is purple3
+                    default: telemetry.addData("Marty", "I don't wanna play this game");//This is the default if it sees none of the above
                 }
             }
 
