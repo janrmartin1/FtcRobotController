@@ -52,14 +52,13 @@ public class MasterClassTesting extends LinearOpMode {
                     sleep(2000);
                     Robot.MoveLift("Reset");
                     sleep(2000);
-                    Robot.Drive("Forward");
+                    Robot.Drive("Forward", 2);
                     sleep(3000);
-                    Robot.Stop();
-                    sleep(2000);
-                    Robot.Drive("Backwards");
+                    Robot.Drive("Backwards", 2);
                     sleep(3000);
-                    Robot.Stop();
+                    Robot.Strafe("Left", 1);
                     sleep(2000);
+                    Robot.Strafe("Right", 1);
                     break;
 
                 }

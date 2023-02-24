@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -39,7 +40,9 @@ public class MasterClass {
 
    public String label = null;
 
+   public ElapsedTime driveTime = new ElapsedTime();
 
+   public ElapsedTime strafeTime = new ElapsedTime();
 
    public boolean scanned = false;
 
@@ -117,24 +120,29 @@ public class MasterClass {
       Claw.setPosition(0);
    }
 
-   public void Drive(String dir){
-      if(dir == "Forward"){
-         FrontLeft.setPower(.5);
-         FrontRight.setPower(.5);
-         BackLeft.setPower(.5);
-         BackRight.setPower(.5);}
-      else if(dir == "Backwards"){
-         FrontLeft.setPower(-.5);
-         FrontRight.setPower(-.5);
-         BackLeft.setPower(-.5);
-         BackRight.setPower(-.5);
-      }
-   }
    public void Stop(){
       FrontLeft.setPower(0);
       FrontRight.setPower(0);
       BackLeft.setPower(0);
       BackRight.setPower(0);
+   }
+
+   public void Drive(String dir, int blocks){// It takes 1440 milliseconds to travel 1 block in straight and backwards
+      driveTime.reset();
+      int newTime = blocks * 1440;
+      if(dir == "Forward" && driveTime.milliseconds() <= newTime){
+         FrontLeft.setPower(.5);
+         FrontRight.setPower(.5);
+         BackLeft.setPower(.5);
+         BackRight.setPower(.5);}
+      else{this.Stop(); driveTime.reset();}
+      if(dir == "Backwards" && driveTime.milliseconds() <= newTime){
+         FrontLeft.setPower(-.5);
+         FrontRight.setPower(-.5);
+         BackLeft.setPower(-.5);
+         BackRight.setPower(-.5);
+      }
+      else{this.Stop(); driveTime.reset();}
    }
 
    public void MoveLift(String pos){
@@ -162,11 +170,17 @@ public class MasterClass {
       }
    }
 
-   public void Strafe(String dir){
+   public void Strafe(String dir, int blocks){
+      strafeTime.reset();
       double POWER = 0;
+      int time = blocks * 1680;  //To strafe 1 block it takes 1680 milliseconds for right and left movement
       switch(dir){
-         case "Left": POWER = .5; break;
-         case "Right": POWER = -.5; break;
+         case "Left":
+            if(strafeTime.milliseconds() <= time) {POWER = .5; break;}
+            else{this.Stop(); break;}
+         case "Right":
+            if(strafeTime.milliseconds() <= time) {POWER = -.5; break;}
+            else{this.Stop(); break;}
          default: telemetry.addData(".", "You entered a wrong direction into the Strafe method");
          POWER = 0;
       }
@@ -196,17 +210,18 @@ public class MasterClass {
                case 1:
                   if(Yaw < -90){
                      POWER = .5;
-                  }break;
+                  }
+                  else{break;}
                case 2:
                   if(Yaw < -180){
                      POWER = .5;
                   }
-                  break;
+                  else{break;}
                case 3:
                   if(Yaw < 90){
                      POWER = -.5;
                   }
-                  break;
+                  else{break;}
                default: POWER = 0;
             }
             //break;
