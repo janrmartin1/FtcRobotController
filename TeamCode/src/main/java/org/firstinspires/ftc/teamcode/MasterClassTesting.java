@@ -36,21 +36,21 @@ public class MasterClassTesting extends LinearOpMode {
 
             if (opModeIsActive()) {
                 while (opModeIsActive()) {
-                    Robot.MoveLift("High");
+                    Robot.MoveLift("High", true);
                     sleep(2000);
-                    Robot.MoveLift("Reset");
+                    Robot.MoveLift("Reset", false);
                     sleep(2000);
-                    Robot.MoveLift("Medium");
+                    Robot.MoveLift("Medium", true);
                     sleep(2000);
-                    Robot.MoveLift("Reset");
+                    Robot.MoveLift("Reset", false);
                     sleep(2000);
-                    Robot.MoveLift("Low");
+                    Robot.MoveLift("Low", true);
                     sleep(3000);
-                    Robot.MoveLift("Reset");
+                    Robot.MoveLift("Reset", false);
                     sleep(2000);
-                    Robot.MoveLift("Ground");
+                    Robot.MoveLift("Ground", true);
                     sleep(2000);
-                    Robot.MoveLift("Reset");
+                    Robot.MoveLift("Reset", false);
                     sleep(2000);
                     Robot.Drive("Forward", 2);
                     sleep(3000);

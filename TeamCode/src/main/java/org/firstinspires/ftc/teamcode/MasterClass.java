@@ -145,7 +145,7 @@ public class MasterClass {
       else{this.Stop(); driveTime.reset();}
    }
 
-   public void MoveLift(String pos){
+   public void MoveLift(String pos, boolean clawPos){
       switch(pos) {
          case "High":
             Lift.setTargetPosition(1080);
@@ -168,6 +168,11 @@ public class MasterClass {
       else {
          Lift.setPower(1);
       }
+
+      if(clawPos == true){
+         Claw.setPosition(1);
+      }
+      else{Claw.setPosition(0);}
    }
 
    public void Strafe(String dir, int blocks){
