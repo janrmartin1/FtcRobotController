@@ -18,6 +18,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 
 public class MasterClass {
@@ -82,7 +85,8 @@ public class MasterClass {
 
 
 
-
+   //This Initializes all the motors, servos and variables
+   //Click the plus beside any of the methods names to view the code inside of them
    public void Init(HardwareMap map){
       FrontLeft = map.get(DcMotorSimple.class, "Fleft");
       FrontRight = map.get(DcMotor.class,"Fright");
@@ -120,6 +124,7 @@ public class MasterClass {
       Claw.setPosition(0);
    }
 
+   //This stops all the wheels
    public void Stop(){
       FrontLeft.setPower(0);
       FrontRight.setPower(0);
@@ -127,6 +132,7 @@ public class MasterClass {
       BackRight.setPower(0);
    }
 
+   //This drives in the direction you entered for however many blocks you entered
    public void Drive(String dir, int blocks){// It takes 1440 milliseconds to travel 1 block in straight and backwards
       driveTime.reset();
       int newTime = blocks * 1440;
@@ -145,6 +151,7 @@ public class MasterClass {
       else{this.Stop(); driveTime.reset();}
    }
 
+   //This takes a String value and uses that to deliver to presets
    public void MoveLift(String pos, boolean clawPos){
       switch(pos) {
          case "High":
@@ -175,6 +182,25 @@ public class MasterClass {
       else{Claw.setPosition(0);}
    }
 
+   //This uses manual values to move the lift
+   public void MoveLift(int pos, boolean clawPos){
+
+            Lift.setTargetPosition(pos);
+
+      if(Lift.getCurrentPosition() > Lift.getTargetPosition()){
+         Lift.setPower(.5);
+      }
+      else {
+         Lift.setPower(1);
+      }
+
+      if(clawPos == true){
+         Claw.setPosition(1);
+      }
+      else{Claw.setPosition(0);}
+   }
+
+   //This Strafes in what direction you enter for the amount of blocks you enter
    public void Strafe(String dir, int blocks){
       strafeTime.reset();
       double POWER = 0;
@@ -199,6 +225,7 @@ public class MasterClass {
       telemetry.update();
    }
 
+   //This Turns the robot 90 degrees time what ever number you put in e..g. 1 would make it turn 90 degrees. And 2 would make it turn 180 degrees
    public void Turn(int num){
       double POWER = 0;
 
@@ -243,6 +270,7 @@ public class MasterClass {
 
    }
 
+   //This does as it says. It turns on the webcam and Scans the cone
    public void Scan() {
 
       /**

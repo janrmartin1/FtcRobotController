@@ -12,7 +12,9 @@ public class TeachingProgram extends LinearOpMode {
         Robot.Init(hardwareMap);//This initializes all of the motors/servos and sets the modes
         waitForStart();
         while(opModeIsActive()){
-            Robot.MoveLift("High", true); //Enter in what junction you want the lift to go to and enter reset to go back to the ground
+            Robot.MoveLift("High",true); //Enter in what junction you want the lift to go to and enter reset to go back to the ground
+
+            Robot.MoveLift(180, true);
 
             Robot.Drive("Forwards", 2); // Enter the direction you want to drive. You do have to put a sleep after for how long you want to drive.
             // It takes 1440 milliseconds to travel 1 block in straight and backwards
