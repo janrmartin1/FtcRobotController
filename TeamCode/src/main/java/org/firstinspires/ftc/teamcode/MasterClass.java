@@ -47,6 +47,8 @@ public class MasterClass {
 
    public ElapsedTime strafeTime = new ElapsedTime();
 
+   public ElapsedTime diagonalTime = new ElapsedTime();
+
    public boolean scanned = false;
 
    final String[] LABELS = {
@@ -141,14 +143,14 @@ public class MasterClass {
          FrontRight.setPower(.5);
          BackLeft.setPower(.5);
          BackRight.setPower(.5);}
-      else{this.Stop(); driveTime.reset();}
+      else{this.Stop();}
       if(dir == "Backwards" && driveTime.milliseconds() <= newTime){
          FrontLeft.setPower(-.5);
          FrontRight.setPower(-.5);
          BackLeft.setPower(-.5);
          BackRight.setPower(-.5);
       }
-      else{this.Stop(); driveTime.reset();}
+      else{this.Stop();}
    }
 
    //This takes a String value and uses that to deliver to presets
@@ -185,7 +187,7 @@ public class MasterClass {
    //This uses manual values to move the lift
    public void MoveLift(int pos, boolean clawPos){
 
-            Lift.setTargetPosition(pos);
+       Lift.setTargetPosition(pos);
 
       if(Lift.getCurrentPosition() > Lift.getTargetPosition()){
          Lift.setPower(.5);
@@ -268,6 +270,59 @@ public class MasterClass {
       BackRight.setPower(-POWER);
 
 
+   }
+
+   public void Diagonal(String xDir, String yDir, int time){
+       double POWER = 0;
+
+       diagonalTime.reset();
+
+       boolean FleftActive = false;
+       boolean BleftActive = false;
+       boolean BrightActive = false;
+       boolean FrightActive = false;
+
+       while(diagonalTime.milliseconds() <= time){
+           switch(yDir){
+               case "Forwards": POWER = .5;
+                if(xDir == "Right"){
+                    FrightActive = true;
+                    BleftActive = true;
+                    FleftActive = false;
+                    BrightActive = false; break;}
+                else if(xDir == "Left"){
+                    FleftActive = true;
+                    BrightActive = true;
+                    FrightActive = false;
+                    BleftActive = false; break;
+                }
+               case "Backwards": POWER = -.5;
+                if(xDir == "Right"){
+                    FleftActive = true;
+                    BrightActive = true;
+                    FrightActive = false;
+                    BleftActive = false; break;
+                }
+                else if(xDir == "Left"){
+                    FrightActive = true;
+                    BleftActive = true;
+                    FleftActive = false;
+                    BrightActive = false; break;}
+           }
+           if(FrightActive){FrontRight.setPower(POWER);}
+           else{FrontRight.setPower(0);}
+
+           if(FleftActive){FrontLeft.setPower(POWER);}
+           else{FrontLeft.setPower(0);}
+
+           if(BrightActive){BackRight.setPower(POWER);}
+           else{BackRight.setPower(0);}
+
+           if(BleftActive){BackLeft.setPower(POWER);}
+           else{BackLeft.setPower(0);}
+
+       }
+       this.Stop();
    }
 
    //This does as it says. It turns on the webcam and Scans the cone
